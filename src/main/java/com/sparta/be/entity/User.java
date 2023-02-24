@@ -1,6 +1,5 @@
 package com.sparta.be.entity;
 
-import com.sparta.be.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,9 +28,9 @@ public class User {
     @Column(nullable = false)
     private String nickName;
 
-    public User(UserRequestDto userRequestDto){
-        this.loginId = userRequestDto.getLoginId();
-        this.password = userRequestDto.getPassword();
-        this.nickName = userRequestDto.getNickName();
+    public User(String loginId, String password, String nickName){
+        this.loginId = loginId;
+        this.password = password;
+        this.nickName = nickName;
     }
 }
