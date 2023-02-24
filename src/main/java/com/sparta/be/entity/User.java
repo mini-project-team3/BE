@@ -2,14 +2,15 @@ package com.sparta.be.entity;
 
 import com.sparta.be.dto.UserRequestDto;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
 
-@Entity
+@Entity(name = "users")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     // User Entity객체가 DB에 저장될때 생성되는 고유 번호
