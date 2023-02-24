@@ -9,4 +9,8 @@ public class ResponseUtils {
     public static <T> ApiResponseDto<T> error(ErrorResponse error) {
         return new ApiResponseDto<T>(false, null, error);
     }
+
+    public static <T> ApiResponseDto<T> ok() {
+        return new ApiResponseDto<T>(true, null, null);
+    }
 }
