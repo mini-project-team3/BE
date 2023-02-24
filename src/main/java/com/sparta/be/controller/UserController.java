@@ -1,8 +1,10 @@
 package com.sparta.be.controller;
 
 import com.sparta.be.common.ApiResponseDto;
+import com.sparta.be.dto.LoginRequestDto;
 import com.sparta.be.dto.SignupRequestDto;
 import com.sparta.be.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,5 +21,10 @@ public class UserController {
     @PostMapping("/signup")
     public ApiResponseDto<?> signup(@RequestBody SignupRequestDto signupRequestDto){
         return userService.signup(signupRequestDto);
+    }
+
+    @PostMapping("/login")
+    public ApiResponseDto<?> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
+        return userService.login(loginRequestDto, response);
     }
 }
