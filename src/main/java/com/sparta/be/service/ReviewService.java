@@ -1,6 +1,7 @@
 package com.sparta.be.service;
 
 import com.sparta.be.common.ApiResponseDto;
+import com.sparta.be.common.ResponseUtils;
 import com.sparta.be.dto.ReviewRequestDto;
 import com.sparta.be.dto.ReviewResponseDto;
 import com.sparta.be.entity.Review;
@@ -23,9 +24,7 @@ public class ReviewService {
     @Transactional
     public ApiResponseDto<?> createReview(ReviewRequestDto requestDto, User user) {
         reviewRepository.saveAndFlush(new Review(requestDto, user));
-        return ApiResponseDto.builder()
-                .success(true)
-                .build();
+        return ResponseUtils.ok();
     }
 
     //전체 게시글 조회
@@ -36,10 +35,7 @@ public class ReviewService {
         for (Review review : reviewList) {
             responseDtoList.add(new ReviewResponseDto(review));
         }
-        return ApiResponseDto.builder()
-                .success(true)
-                .data(responseDtoList)
-                .build();
+        return ResponseUtils.ok(responseDtoList);
     }
 
     //선택 게시글 조회
@@ -47,10 +43,7 @@ public class ReviewService {
     public ApiResponseDto<?> getReview(Long id) {
         Review review = getReviewById(id);
         ReviewResponseDto responseDto = new ReviewResponseDto(review);
-        return ApiResponseDto.builder()
-                .success(true)
-                .data(responseDto)
-                .build();
+        return ResponseUtils.ok(responseDto);
     }
 
     //게시글 수정
@@ -59,9 +52,7 @@ public class ReviewService {
         Review review = getReviewById(id);
         review.update(requestDto);
         reviewRepository.flush();
-        return ApiResponseDto.builder()
-                .success(true)
-                .build();
+        return ResponseUtils.ok();
     }
 
     //게시글 삭제
@@ -69,9 +60,7 @@ public class ReviewService {
     public ApiResponseDto<?> deleteReview(Long id) {
         Review review = getReviewById(id);
         reviewRepository.deleteById(review.getId());
-        return ApiResponseDto.builder()
-                .success(true)
-                .build();
+        return ResponseUtils.ok();
     }
 
     private Review getReviewById(Long id) {
