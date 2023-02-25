@@ -5,17 +5,16 @@ import com.sparta.be.common.ResponseUtils;
 import com.sparta.be.dto.ReviewDetailResponseDto;
 import com.sparta.be.dto.ReviewRequestDto;
 import com.sparta.be.dto.ReviewResponseDto;
+import com.sparta.be.entity.CategoryType;
 import com.sparta.be.entity.Review;
 import com.sparta.be.entity.User;
 import com.sparta.be.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,9 +26,15 @@ public class ReviewService {
     private static final int PAGE_SIZE = 10;
 
     //게시글 작성
-    @Transactional
-    public ApiResponseDto<?> createReview(ReviewRequestDto requestDto, User user) {
-        reviewRepository.saveAndFlush(new Review(requestDto, user));
+    public ApiResponseDto createReview(ReviewRequestDto requestDto, User user) {
+
+        List<CategoryType> categoryList = new ArrayList<>();
+        for (String category : requestDto.getCategoryList()) {
+            categoryList.add(CategoryType.valueOf(category));
+        }
+
+        reviewRepository.save(Review.of(requestDto, categoryList, user));
+
         return ResponseUtils.ok();
     }
 
@@ -42,6 +47,28 @@ public class ReviewService {
 
         return ResponseUtils.ok(page.getContent());
 
+    }
+
+    // 카테고리별 게시글 조회
+    @Transactional(readOnly = true)
+    public ApiResponseDto<List<ReviewResponseDto>> getReviewsByCategory(Long id, int pageNo, String criteria) {
+
+        CategoryType category = CategoryType.valueOf("C" + id);
+
+        List<Review> reviewsAll = reviewRepository.findAll();
+        List<ReviewResponseDto> selectedReviews = new ArrayList<>();
+        for (Review review : reviewsAll) {
+            if (review.getCategoryList().contains(category)) {
+                selectedReviews.add(ReviewResponseDto.from(review));
+            }
+        }
+
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), selectedReviews.size());
+        Page<ReviewResponseDto> reviewPage = new PageImpl<>(selectedReviews.subList(start, end), pageable, selectedReviews.size());
+
+        return ResponseUtils.ok(reviewPage.getContent());
     }
 
     // 게시글 상세 조회
