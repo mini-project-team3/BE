@@ -1,5 +1,6 @@
 package com.sparta.be.entity;
 
+import com.sparta.be.dto.ReviewRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,4 +25,14 @@ public class Review extends Timestamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    public Review(ReviewRequestDto requestDto, User user) {
+        this.title = requestDto.getTitle();
+        this.contents = requestDto.getContents();
+        this.user = user;
+    }
+
+    public void update(ReviewRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.contents = requestDto.getContents();
+    }
 }

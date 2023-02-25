@@ -1,5 +1,6 @@
 package com.sparta.be.dto;
 
+import com.sparta.be.entity.Review;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -13,4 +14,10 @@ public class ReviewResponseDto {
     private LocalDateTime createdAt;
     private int likeCount;
 
+    public ReviewResponseDto(Review review) {
+        this.id = review.getId();
+        this.title = review.getTitle();
+        this.nickname = review.getUser().getNickname();
+        this.createdAt = review.getCreatedAt();
+    }
 }
