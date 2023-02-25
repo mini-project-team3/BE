@@ -15,11 +15,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class ReviewController {
+
     private final ReviewService reviewService;
 
     //게시글 작성
     @PostMapping("/api/reviews")
-    public ApiResponseDto<?> createReview(@RequestBody ReviewRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ApiResponseDto createReview(@RequestBody ReviewRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return reviewService.createReview(requestDto, userDetails.getUser());
     }
 
@@ -34,6 +35,14 @@ public class ReviewController {
     @GetMapping("/api/reviews/{id}")
     public ApiResponseDto<ReviewDetailResponseDto> getReview(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return reviewService.getReview(id, userDetails.getUser());
+    }
+
+    // 카테고리별 게시글 조회
+    @GetMapping("/api/reviews/category/{id}")
+    public ApiResponseDto<List<ReviewResponseDto>> getReviewsByCategory(@PathVariable Long id,
+                                                                        @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+                                                                        @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria) {
+        return reviewService.getReviewsByCategory(id, pageNo, criteria);
     }
 
     //게시글 수정

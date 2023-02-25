@@ -12,6 +12,6 @@ public class ReviewRequestDto {
 
     private String title;
     private String contents;
-    private List<Integer> categoryList;
+    private List<String> categoryList;
 
 }

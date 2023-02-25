@@ -3,6 +3,7 @@ package com.sparta.be.entity;
 import com.sparta.be.dto.ReviewRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,10 +34,22 @@ public class Review extends Timestamped {
     @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
-    public Review(ReviewRequestDto requestDto, User user) {
+    private List<CategoryType> categoryList = new ArrayList<>();
+
+    @Builder
+    private Review(ReviewRequestDto requestDto, List<CategoryType> category, User user) {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
+        this.categoryList = category;
         this.user = user;
+    }
+
+    public static Review of(ReviewRequestDto request, List<CategoryType> category, User user) {
+        return Review.builder()
+                .requestDto(request)
+                .user(user)
+                .category(category)
+                .build();
     }
 
     public void update(ReviewRequestDto requestDto) {
