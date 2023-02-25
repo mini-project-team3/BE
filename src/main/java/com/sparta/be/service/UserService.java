@@ -44,7 +44,7 @@ public class UserService {
 
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ApiResponseDto<?> login(LoginRequestDto loginRequestDto, HttpServletResponse response) { // 회원 가입
         String loginId = loginRequestDto.getLoginId();
         String password = loginRequestDto.getPassword();
