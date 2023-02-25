@@ -28,5 +28,13 @@ public class ErrorResponse {
                 .message(message)
                 .build();
     }
+
+    public static ErrorResponse of(ErrorType errorType) {
+        return ErrorResponse.builder()
+                .status(errorType.getCode())
+                .message(errorType.getMessage())
+                .build();
+    }
+
 }
 
