@@ -1,12 +1,16 @@
 package com.sparta.be.controller;
 
 import com.sparta.be.common.ApiResponseDto;
+import com.sparta.be.dto.ReviewDetailResponseDto;
 import com.sparta.be.dto.ReviewRequestDto;
+import com.sparta.be.dto.ReviewResponseDto;
 import com.sparta.be.security.UserDetailsImpl;
 import com.sparta.be.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,14 +25,15 @@ public class ReviewController {
 
     //게시글 전체 조회
     @GetMapping("/api/reviews")
-    public ApiResponseDto<?> getReviews(){
-        return reviewService.getReviews();
+    public ApiResponseDto<List<ReviewResponseDto>> getReviews(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+                                                              @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria) {
+        return reviewService.getReviews(pageNo, criteria);
     }
 
-    //선택한 게시글 조회
+    // 게시글 상세 조회
     @GetMapping("/api/reviews/{id}")
-    public ApiResponseDto<?> getReview(@PathVariable Long id){
-        return reviewService.getReview(id);
+    public ApiResponseDto<ReviewDetailResponseDto> getReview(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return reviewService.getReview(id, userDetails.getUser());
     }
 
     //게시글 수정
@@ -39,7 +44,8 @@ public class ReviewController {
 
     //게시글 삭제
     @DeleteMapping("/api/reviews/{id}")
-    public ApiResponseDto<?> deleteReview(@PathVariable Long id){
+    public ApiResponseDto<?> deleteReview(@PathVariable Long id) {
         return reviewService.deleteReview(id);
     }
+
 }

@@ -1,6 +1,8 @@
 package com.sparta.be.dto;
 
 
+import com.sparta.be.entity.Comment;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,4 +14,19 @@ public class CommentResponseDto {
     private Long id;
     private String nickname;
     private String contents;
+
+    @Builder
+    private CommentResponseDto(Long id, String nickname, String contents) {
+        this.id = id;
+        this.nickname = nickname;
+        this.contents = contents;
+    }
+
+    public static CommentResponseDto from(Comment entity) {
+        return CommentResponseDto.builder()
+                .id(entity.getId())
+                .nickname(entity.getUser().getNickname())
+                .contents(entity.getContents())
+                .build();
+    }
 }

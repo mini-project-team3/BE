@@ -6,6 +6,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,6 +28,11 @@ public class Review extends Timestamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    private int likeCount;
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
+    private List<Comment> commentList = new ArrayList<>();
+
     public Review(ReviewRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
@@ -35,4 +43,5 @@ public class Review extends Timestamped {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
     }
+
 }
