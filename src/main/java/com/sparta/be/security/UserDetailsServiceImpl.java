@@ -1,5 +1,6 @@
 package com.sparta.be.security;
 
+import com.sparta.be.common.ErrorType;
 import com.sparta.be.entity.User;
 import com.sparta.be.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,15 +14,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-        private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-        @Override
-        public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-            User user = userRepository.findByLoginId(loginId)
-                    .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을수 없습니다."));
+    @Override
+    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UsernameNotFoundException(ErrorType.NOT_FOUND_USER.getMessage()));   // 사용자가 DB 에 없으면 예외처리
 
-            return new UserDetailsImpl(user, user.getLoginId());
+        return new UserDetailsImpl(user, user.getLoginId());   // 사용자 정보를 UserDetails 로 반환
     }
-
 
 }

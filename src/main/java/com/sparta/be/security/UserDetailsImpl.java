@@ -2,30 +2,47 @@ package com.sparta.be.security;
 
 import com.sparta.be.entity.User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 
 public class UserDetailsImpl implements UserDetails {
 
-        private final User user;
-        private final String userId;
+    private final User user;
+    private final String loginId;
 
-        public UserDetailsImpl(User user, String userId){
-            this.user = user;
-            this.userId = userId;
-        }
+    // 인증이 완료된 사용자 추가하기
+    public UserDetailsImpl(User user, String loginId) {
+        this.user = user;
+        this.loginId = loginId;
+    }
 
+    public User getUser() {
+        return user;
+    }
 
-        public User getUser() {
-            return user;
-        }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        @Override
-        public String getUsername() {
-            return this.userId;
-        }
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("ROLE_USER");
+        Collection<GrantedAuthority> authorities = new ArrayList<>();   // 사용자 권한을 GrantedAuthority 로 추상화
+        authorities.add(simpleGrantedAuthority);
+
+        return authorities; // GrantedAuthority 로 추상화된 사용자 권한 반환
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.loginId;
+    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -33,19 +50,9 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+    public boolean isAccountNonLocked() {
+        return false;
     }
-
-    @Override
-        public String getPassword() {
-            return null;
-        }
-
-        @Override
-        public boolean isAccountNonLocked() {
-            return false;
-        }
 
     @Override
     public boolean isCredentialsNonExpired() {
@@ -53,8 +60,8 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     @Override
-        public boolean isEnabled() {
-            return false;
-        }
+    public boolean isEnabled() {
+        return false;
+    }
 
 }

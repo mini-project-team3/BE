@@ -2,6 +2,7 @@ package com.sparta.be.config;
 
 import com.sparta.be.jwt.JwtAuthFilter;
 import com.sparta.be.jwt.JwtUtil;
+import com.sparta.be.security.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -26,12 +27,12 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer(){
+    public WebSecurityCustomizer webSecurityCustomizer() {
 
         return (web) -> web.ignoring()
                 .requestMatchers(PathRequest.toH2Console())
@@ -42,19 +43,18 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
 
-        // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
+        // 기본 설정인 Session 방식 사용하지 않고 JWT 방식 사용
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeRequests().requestMatchers(HttpMethod.GET,"/api/users/**").permitAll()
+        http.authorizeHttpRequests().requestMatchers("/api/users/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
                 .anyRequest().authenticated()
-                // JWT 인증/인가를 사용하기 위한 설정
+                .and().exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         http.formLogin().permitAll();
 
         return http.build();
     }
-
 
 }

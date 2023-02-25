@@ -26,11 +26,11 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private String nickName;
+    private String nickname;
 
     public User(String loginId, String password, String nickName){
         this.loginId = loginId;
         this.password = password;
-        this.nickName = nickName;
+        this.nickname = nickName;
     }
 }
