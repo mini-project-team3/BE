@@ -6,5 +6,5 @@ import lombok.Getter;
 public class SignupRequestDto {
     private String loginId;
     private String password;
-    private String nickName;
+    private String nickname;
 }

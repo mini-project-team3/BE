@@ -30,7 +30,7 @@ public class UserService {
     public ApiResponseDto<?> signup(SignupRequestDto signupRequestDto) { // 회원 가입
         String loginId = signupRequestDto.getLoginId();
         String password = passwordEncoder.encode(signupRequestDto.getPassword()); // 비밀번호 암호화
-        String nickName = signupRequestDto.getNickName();
+        String nickname = signupRequestDto.getNickname();
 
         //회원 중복 확인
         Optional<User> found = userRepository.findByLoginId(loginId);
@@ -38,7 +38,7 @@ public class UserService {
             return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST, "중복된 사용자 입니다."));
         }
 
-        User user = new User(loginId, password, nickName);
+        User user = new User(loginId, password, nickname);
         userRepository.save(user);
         return ResponseUtils.ok();
 
@@ -56,7 +56,7 @@ public class UserService {
 
         //비밀번호 중복 확인
         User user = userRepository.findByLoginId(loginId).get();
-        if (!passwordEncoder.matches(password,loginRequestDto.getPassword())){
+        if (!passwordEncoder.matches(password, user.getPassword())){
             return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."));
         }
 
