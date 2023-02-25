@@ -9,18 +9,22 @@ import com.sparta.be.entity.Review;
 import com.sparta.be.entity.User;
 import com.sparta.be.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
-    private final ReviewRepository reviewRepository;
 
+    private final ReviewRepository reviewRepository;
+    private static final int PAGE_SIZE = 10;
 
     //게시글 작성
     @Transactional
@@ -31,13 +35,13 @@ public class ReviewService {
 
     //전체 게시글 조회
     @Transactional(readOnly = true)
-    public ApiResponseDto<?> getReviews() {
-        List<Review> reviewList = reviewRepository.findAllByOrderByCreatedAtDesc();
-        List<ReviewResponseDto> responseDtoList = new ArrayList<>();
-        for (Review review : reviewList) {
-            responseDtoList.add(new ReviewResponseDto(review));
-        }
-        return ResponseUtils.ok(responseDtoList);
+    public ApiResponseDto<List<ReviewResponseDto>> getReviews(int pageNo, String criteria) {
+
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
+        Page<ReviewResponseDto> page = reviewRepository.findAll(pageable).map(ReviewResponseDto::from);
+
+        return ResponseUtils.ok(page.getContent());
+
     }
 
     // 게시글 상세 조회

@@ -3,11 +3,14 @@ package com.sparta.be.controller;
 import com.sparta.be.common.ApiResponseDto;
 import com.sparta.be.dto.ReviewDetailResponseDto;
 import com.sparta.be.dto.ReviewRequestDto;
+import com.sparta.be.dto.ReviewResponseDto;
 import com.sparta.be.security.UserDetailsImpl;
 import com.sparta.be.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,8 +25,9 @@ public class ReviewController {
 
     //게시글 전체 조회
     @GetMapping("/api/reviews")
-    public ApiResponseDto<?> getReviews(){
-        return reviewService.getReviews();
+    public ApiResponseDto<List<ReviewResponseDto>> getReviews(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+                                                              @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria) {
+        return reviewService.getReviews(pageNo, criteria);
     }
 
     // 게시글 상세 조회
