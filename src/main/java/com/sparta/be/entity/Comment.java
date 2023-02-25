@@ -18,6 +18,7 @@ public class Comment extends Timestamped{
     private String contents;
 
 
+
     // 댓글 N : 게시글 1, 주인 정하기
     @ManyToOne
     @Column(nullable = false)
