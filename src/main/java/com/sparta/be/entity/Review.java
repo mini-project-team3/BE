@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,6 +26,9 @@ public class Review extends Timestamped {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
+    private List<LikeReview> likeReview;
 
     public Review(ReviewRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();
