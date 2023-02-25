@@ -21,12 +21,12 @@ public class Comment extends Timestamped{
 
     // 댓글 N : 게시글 1, 주인 정하기
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(name = "review_id", nullable = false)
     private Review review;
 
     // 댓글 N : 유저 1 , 주인 정하기
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
 
@@ -36,3 +36,4 @@ public class Comment extends Timestamped{
         this.user = user;
     }
 }
+
