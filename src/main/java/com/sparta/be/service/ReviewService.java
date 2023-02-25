@@ -2,6 +2,7 @@ package com.sparta.be.service;
 
 import com.sparta.be.common.ApiResponseDto;
 import com.sparta.be.common.ResponseUtils;
+import com.sparta.be.dto.ReviewDetailResponseDto;
 import com.sparta.be.dto.ReviewRequestDto;
 import com.sparta.be.dto.ReviewResponseDto;
 import com.sparta.be.entity.Review;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,11 +40,20 @@ public class ReviewService {
         return ResponseUtils.ok(responseDtoList);
     }
 
-    //선택 게시글 조회
+    // 게시글 상세 조회
     @Transactional(readOnly = true)
-    public ApiResponseDto<?> getReview(Long id) {
+    public ApiResponseDto<ReviewDetailResponseDto> getReview(Long id, User user) {
+
         Review review = getReviewById(id);
-        ReviewResponseDto responseDto = new ReviewResponseDto(review);
+
+        boolean isWriter = false;
+        Optional<Review> found = reviewRepository.findByIdAndUser(id, user);
+        if (found.isPresent()) {
+            isWriter = true;
+        }
+
+        ReviewDetailResponseDto responseDto = ReviewDetailResponseDto.from(review, isWriter);
+
         return ResponseUtils.ok(responseDto);
     }
 
@@ -68,4 +79,5 @@ public class ReviewService {
                 () -> new IllegalArgumentException("유저가 존재하지 않습니다.")
         );
     }
+
 }
