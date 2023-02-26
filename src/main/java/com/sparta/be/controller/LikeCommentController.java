@@ -5,10 +5,7 @@ import com.sparta.be.security.UserDetailsImpl;
 import com.sparta.be.service.LikeCommnetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +18,11 @@ public class LikeCommentController { // 댓글 좋아요
     @PostMapping("/likes/{id}")
     public ApiResponseDto<?> likeComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return likeCommnetService.likeComment(id, userDetails.getUser());
+    }
+
+    @DeleteMapping("/likes/{id}")
+    public ApiResponseDto<?> likeCancelReview(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return likeCommnetService.likeCancelComment(id, userDetails.getUser());
     }
 
 }

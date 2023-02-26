@@ -34,4 +34,23 @@ public class LikeCommnetService {
         return ResponseUtils.ok();
     }
 
+    @Transactional
+    public ApiResponseDto<?> likeCancelComment(Long id, User user){
+        //댓글 확인
+        if (commentRepsoitory.findById(id).isEmpty()){
+            return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST,"리뷰가 존재하지 않습니다."));
+        }
+
+        Comment comment = commentRepsoitory.findById(id).get();
+
+        LikeComment likes = likeCommentRepository.findByCommentAndUser(comment,user).get();
+        if (!likeCommentRepository.findByCommentAndUser(comment, user).isEmpty()) {
+            likeCommentRepository.delete(likes);
+            likeCommentRepository.flush();
+        }
+
+        return ResponseUtils.ok();
+    }
+
+
 }
