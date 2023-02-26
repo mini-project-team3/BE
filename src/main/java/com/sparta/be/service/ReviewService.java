@@ -60,7 +60,6 @@ public class ReviewService {
         Page<ReviewResponseDto> page = reviewRepository.findAll(pageable).map(ReviewResponseDto::from);
 
         return ResponseUtils.ok(page.getContent());
-
     }
 
     // 카테고리별 게시글 조회
@@ -73,7 +72,6 @@ public class ReviewService {
         Page<ReviewResponseDto> reviewPage = reviewRepository.findAllByCategoryListCategoryCategoryType(category, pageable).map(ReviewResponseDto::from);
 
         return ResponseUtils.ok(reviewPage.getContent());
-
     }
 
     // 게시글 상세 조회
@@ -91,6 +89,15 @@ public class ReviewService {
         ReviewDetailResponseDto responseDto = ReviewDetailResponseDto.from(review, isWriter);
 
         return ResponseUtils.ok(responseDto);
+    }
+
+    // 내가 쓴 리뷰 조회
+    public ApiResponseDto<List<ReviewResponseDto>> getMyReviews(int pageNo, String criteria, User user) {
+
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
+        Page<ReviewResponseDto> page = reviewRepository.findAllByUser(user, pageable).map(ReviewResponseDto::from);
+
+        return ResponseUtils.ok(page.getContent());
     }
 
     //게시글 수정
