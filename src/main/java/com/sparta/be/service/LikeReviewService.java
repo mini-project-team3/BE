@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LikeReviewService {
 
-    private final LikeReviewRepository likesRepository;
+    private final LikeReviewRepository likeReviewRepository;
     private final ReviewRepository reviewRepository;
 
     @Transactional
@@ -28,14 +28,29 @@ public class LikeReviewService {
         }
         Review review = reviewRepository.findById(id).get();
 
-        LikeReview likes = likesRepository.findByReviewAndUser(review,user).get();
-        if (likesRepository.findByReviewAndUser(review, user).isEmpty()){
-            likesRepository.save(likes);
-        }else{
-            likesRepository.delete(likes);
-            likesRepository.flush();
+        LikeReview likes = likeReviewRepository.findByReviewAndUser(review,user).get();
+        if (likeReviewRepository.findByReviewAndUser(review, user).isEmpty()){
+            likeReviewRepository.save(likes);
         }
+
             return ResponseUtils.ok();
+    }
+
+    @Transactional
+    public ApiResponseDto<?> likeCancelReview(Long id, User user){
+        //리뷰 확인
+        if (reviewRepository.findById(id).isEmpty()){
+            return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST,"리뷰가 존재하지 않습니다."));
+        }
+        Review review = reviewRepository.findById(id).get();
+
+        LikeReview likes = likeReviewRepository.findByReviewAndUser(review,user).get();
+        if (!likeReviewRepository.findByReviewAndUser(review, user).isEmpty()) {
+            likeReviewRepository.delete(likes);
+            likeReviewRepository.flush();
+        }
+
+        return ResponseUtils.ok();
     }
 
 }
