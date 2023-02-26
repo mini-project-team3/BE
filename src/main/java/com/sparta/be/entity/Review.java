@@ -29,27 +29,32 @@ public class Review extends Timestamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private int likeCount;
-
     @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
-    private List<CategoryType> categoryList = new ArrayList<>();
+    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
+    private List<ReviewCategory> categoryList = new ArrayList<>();
+
+    private int likeCount;
 
     @Builder
-    private Review(ReviewRequestDto requestDto, List<CategoryType> category, User user) {
+    private Review(ReviewRequestDto requestDto, List<ReviewCategory> categoryList, User user) {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
-        this.categoryList = category;
+        this.categoryList = categoryList;
         this.user = user;
     }
 
-    public static Review of(ReviewRequestDto request, List<CategoryType> category, User user) {
+    public static Review of(ReviewRequestDto request, User user) {
         return Review.builder()
                 .requestDto(request)
                 .user(user)
-                .category(category)
+                .categoryList(new ArrayList<>())
                 .build();
+    }
+
+    public void addCategory(ReviewCategory reviewCategory) {
+        this.getCategoryList().add(reviewCategory);
     }
 
     public void update(ReviewRequestDto requestDto) {
