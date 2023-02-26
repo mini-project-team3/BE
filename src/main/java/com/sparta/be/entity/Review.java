@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,14 +29,15 @@ public class Review extends Timestamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-
-    private int likeCount;
+    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
+    private List<LikeReview> likeReviewList = new ArrayList<>();
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
     private List<CategoryType> categoryList = new ArrayList<>();
 
+    private int likeCount;
     @Builder
     private Review(ReviewRequestDto requestDto, List<CategoryType> category, User user) {
         this.title = requestDto.getTitle();
