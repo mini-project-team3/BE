@@ -15,6 +15,15 @@ public class CommentResponseDto {
     private String nickname;
     private String contents;
 
+    private int likeCount;
+
+    private CommentResponseDto(Comment comment) {
+        this.id = comment.getId();
+        this.nickname = comment.getUser().getNickname();
+        this.contents = comment.getContents();
+        this.likeCount = comment.getLikeCommentList() != null ? comment.getLikeCommentList().size() : 0;
+    }
+
     @Builder
     private CommentResponseDto(Long id, String nickname, String contents) {
         this.id = id;
