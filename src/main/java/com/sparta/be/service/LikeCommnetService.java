@@ -3,9 +3,7 @@ package com.sparta.be.service;
 import com.sparta.be.common.ApiResponseDto;
 import com.sparta.be.common.ErrorResponse;
 import com.sparta.be.common.ResponseUtils;
-import com.sparta.be.entity.LikeComment;
-import com.sparta.be.entity.Review;
-import com.sparta.be.entity.User;
+import com.sparta.be.entity.*;
 import com.sparta.be.repository.LikeCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LikeCommnetService {
 
-    private final LikeCommentRepository likecommentRepository;
+    private final LikeCommentRepository likeCommentRepository;
 
     private final CommentRepsoitory commentRepsoitory;
 
@@ -28,10 +26,12 @@ public class LikeCommnetService {
         }
         Review review = commentRepsoitory.findById(id).get();
 
-        LikeComment likeComment = likecommentRepository.findByCommentAndUser(comment,user).get();
-        if (likecommentRepository.findByCommentAndUser(comment, user).isEmpty()){
-            likecommentRepository.save(likeComment);
+        LikeComment likeComment = likeCommentRepository.findByCommentAndUser(comment,user).get();
+        if (likeCommentRepository.findByCommentAndUser(comment, user).isEmpty()){
+            likeCommentRepository.save(likeComment);
         }
+
         return ResponseUtils.ok();
     }
+
 }
