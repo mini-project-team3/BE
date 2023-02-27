@@ -52,6 +52,10 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests().requestMatchers("/api/users/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/reviews/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/reviews/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/comments/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/comments/**").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
