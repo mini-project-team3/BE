@@ -20,12 +20,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ApiResponseDto signup(@Valid @RequestBody SignupRequestDto signupRequestDto){
+    public ApiResponseDto<Void> signup(@Valid @RequestBody SignupRequestDto signupRequestDto){
         return userService.signup(signupRequestDto);
     }
 
     @PostMapping("/login")
-    public ApiResponseDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
+    public ApiResponseDto<Void> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
         return userService.login(loginRequestDto, response);
     }
 }
