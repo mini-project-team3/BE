@@ -8,6 +8,7 @@ import com.sparta.be.dto.SignupRequestDto;
 import com.sparta.be.entity.User;
 import com.sparta.be.jwt.JwtUtil;
 import com.sparta.be.repository.UserRepository;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +27,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public ApiResponseDto signup(SignupRequestDto signupRequestDto) { // 회원 가입
+    public ApiResponseDto<Void> signup(SignupRequestDto signupRequestDto) { // 회원 가입
         String loginId = signupRequestDto.getLoginId();
         String password = passwordEncoder.encode(signupRequestDto.getPassword()); // 비밀번호 암호화
         String nickname = signupRequestDto.getNickname();
@@ -44,7 +45,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public ApiResponseDto login(LoginRequestDto loginRequestDto, HttpServletResponse response) { // 회원 가입
+    public ApiResponseDto<Void> login(LoginRequestDto loginRequestDto, HttpServletResponse response) { // 회원 가입
         String loginId = loginRequestDto.getLoginId();
         String password = loginRequestDto.getPassword();
 
@@ -59,7 +60,17 @@ public class UserService {
             throw new IllegalArgumentException(ErrorType.NOT_MATCHING_PASSWORD.getMessage());
         }
 
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getLoginId()));
+        // Authorization 에 token 설정
+        String token = jwtUtil.createToken(user.getLoginId());
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
+
+        // 쿠키 설정
+        Cookie cookie = new Cookie("token", token.substring(7));
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(3600);
+        response.addCookie(cookie);
+
         return ResponseUtils.ok();
 
     }
