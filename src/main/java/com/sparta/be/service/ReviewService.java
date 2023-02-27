@@ -30,7 +30,7 @@ public class ReviewService {
 
     //게시글 작성
     @Transactional
-    public ApiResponseDto createReview(ReviewRequestDto requestDto, User user) {
+    public ApiResponseDto<Void> createReview(ReviewRequestDto requestDto, User user) {
 
         Review review = Review.of(requestDto, user);
         List<ReviewCategory> categoryList = new ArrayList<>();
@@ -113,7 +113,7 @@ public class ReviewService {
 
     //게시글 수정
     @Transactional
-    public ApiResponseDto update(Long id, ReviewRequestDto requestDto) {
+    public ApiResponseDto<Void> update(Long id, ReviewRequestDto requestDto) {
 
         Review review = getReviewById(id);
 
@@ -125,7 +125,7 @@ public class ReviewService {
 
     //게시글 삭제
     @Transactional
-    public ApiResponseDto deleteReview(Long id) {
+    public ApiResponseDto<Void> deleteReview(Long id) {
 
         Review review = getReviewById(id);
 
