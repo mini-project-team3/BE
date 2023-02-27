@@ -31,11 +31,12 @@ public class LikeReviewService {
         }
 
 
-        Optional<LikeReview> likes = likeReviewRepository.findByReviewAndUser(review.get(),user);
-        if (likes.isEmpty()){
+        Optional<LikeReview> found = likeReviewRepository.findByReviewAndUser(review.get(),user);
+        if (found.isEmpty()){
             review.get().likeReviewUp();
-            likeReviewRepository.save(likes.get());
-        }else if (likes.isPresent()){
+            LikeReview likeReview = LikeReview.of(review.get(), user);
+            likeReviewRepository.save(likeReview);
+        }else {
             return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST, "좋아요가 이미 되어있습니다."));
         }
 
@@ -51,13 +52,13 @@ public class LikeReviewService {
         }
 
 
-        Optional<LikeReview> likes = likeReviewRepository.findByReviewAndUser(review.get(),user);
-        if (!likes.isEmpty()) {
+        Optional<LikeReview> found = likeReviewRepository.findByReviewAndUser(review.get(),user);
+        if (found.isPresent()) {
             review.get().likeReviewDown();
-            likeReviewRepository.delete(likes.get());
+            likeReviewRepository.delete(found.get());
             likeReviewRepository.flush();
         }else {
-            review.get().getLikeCount(); // 이미 지워졌을때 누르면 좋아요 숫자만 보여주는식으로 한다.
+            return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST, "좋아요가 이미 취소 되어있습니다."));
         }
 
         return ResponseUtils.ok();
