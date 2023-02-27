@@ -38,6 +38,8 @@ public class Comment extends Timestamped{
         this.contents = requestDto.getContents();
         this.user = user;
     }
-
+    public void update(CommentRequestDto requestDto) {
+        this.contents = requestDto.getContents();
+    }
 }
 
