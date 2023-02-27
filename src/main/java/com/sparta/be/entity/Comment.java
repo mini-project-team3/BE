@@ -41,5 +41,13 @@ public class Comment extends Timestamped{
     public void update(CommentRequestDto requestDto) {
         this.contents = requestDto.getContents();
     }
+
+    /*public void likeCommentUp(){
+        this.likeCount += 1;
+    }
+
+    public void likeCommentDown(){
+        this.likeCount -= 1;
+    }*/
 }
 

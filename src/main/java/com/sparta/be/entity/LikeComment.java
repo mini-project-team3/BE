@@ -2,6 +2,7 @@ package com.sparta.be.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,5 +23,18 @@ public class LikeComment {
     @JoinColumn(name = "comment_id", nullable = false)
     private Comment comment;
 
+    @Builder
+    private LikeComment(Comment comment, User user){
+        this.comment = comment;
+        this.user = user;
+    }
 
+    public static LikeComment of(Comment comment, User user){
+        LikeComment likeComment = LikeComment.builder()
+                .comment(comment)
+                .user(user)
+                .build();
+        comment.getLikeCommentList().add(likeComment);
+        return likeComment;
+    }
 }

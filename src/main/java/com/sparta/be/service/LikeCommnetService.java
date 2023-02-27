@@ -29,9 +29,13 @@ public class LikeCommnetService {
         }
 
 
-        Optional<LikeComment> likes = likeCommentRepository.findByCommentAndUser(comment.get(),user);
-        if (likes.isEmpty()){
-            likeCommentRepository.save(likes.get());
+        Optional<LikeComment> found = likeCommentRepository.findByCommentAndUser(comment.get(),user);
+        if (found.isEmpty()){
+             review.get().likeCommentUp();
+            LikeComment likeComment = LikeComment.of(comment.get(), user);
+            likeCommentRepository.save(likeComment);
+        }else {
+            return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST, "좋아요가 이미 되어있습니다."));
         }
 
         return ResponseUtils.ok();
@@ -46,10 +50,13 @@ public class LikeCommnetService {
         }
 
 
-        Optional<LikeComment> likes = likeCommentRepository.findByCommentAndUser(comment.get(),user);
-        if (!likes.isEmpty()) {
-            likeCommentRepository.delete(likes.get());
+        Optional<LikeComment> found = likeCommentRepository.findByCommentAndUser(comment.get(),user);
+        if (found.isPresent()) {
+            review.get().likeCommentDown();
+            likeCommentRepository.delete(found.get());
             likeCommentRepository.flush();
+        }else {
+            return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST, "좋아요가 이미 취소 되어있습니다."));
         }
 
         return ResponseUtils.ok();
