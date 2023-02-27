@@ -12,6 +12,7 @@ import java.util.List;
 
 @Getter
 @Entity
+@Table(name = "REVIEW")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Review extends Timestamped {
 

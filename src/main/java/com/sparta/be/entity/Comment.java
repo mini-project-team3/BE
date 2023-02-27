@@ -10,6 +10,7 @@ import java.util.List;
 
 @Getter
 @Entity
+@Table(name = "comment")
 @NoArgsConstructor
 public class Comment extends Timestamped{
 
