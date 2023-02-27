@@ -56,13 +56,13 @@ public class ReviewController {
 
     //게시글 수정
     @PutMapping("/api/reviews/{id}")
-    public ApiResponseDto<?> updateReview(@PathVariable Long id, @RequestBody ReviewRequestDto requestDto){
+    public ApiResponseDto updateReview(@PathVariable Long id, @RequestBody ReviewRequestDto requestDto){
         return reviewService.update(id, requestDto);
     }
 
     //게시글 삭제
     @DeleteMapping("/api/reviews/{id}")
-    public ApiResponseDto<?> deleteReview(@PathVariable Long id) {
+    public ApiResponseDto deleteReview(@PathVariable Long id) {
         return reviewService.deleteReview(id);
     }
 
