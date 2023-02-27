@@ -20,7 +20,7 @@ public class ReviewController {
 
     //게시글 작성
     @PostMapping("/api/reviews")
-    public ApiResponseDto createReview(@RequestBody ReviewRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ApiResponseDto<Void> createReview(@RequestBody ReviewRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return reviewService.createReview(requestDto, userDetails.getUser());
     }
 
@@ -56,13 +56,13 @@ public class ReviewController {
 
     //게시글 수정
     @PutMapping("/api/reviews/{id}")
-    public ApiResponseDto updateReview(@PathVariable Long id, @RequestBody ReviewRequestDto requestDto){
+    public ApiResponseDto<Void> updateReview(@PathVariable Long id, @RequestBody ReviewRequestDto requestDto){
         return reviewService.update(id, requestDto);
     }
 
     //게시글 삭제
     @DeleteMapping("/api/reviews/{id}")
-    public ApiResponseDto deleteReview(@PathVariable Long id) {
+    public ApiResponseDto<Void> deleteReview(@PathVariable Long id) {
         return reviewService.deleteReview(id);
     }
 

@@ -15,6 +15,7 @@ public class ReviewResponseDto {
     private LocalDateTime createdAt;
     private int likeCount;
 
+
     @Builder
     public ReviewResponseDto(Long id, String title, String nickname, LocalDateTime createdAt, int likeCount) {
         this.id = id;
