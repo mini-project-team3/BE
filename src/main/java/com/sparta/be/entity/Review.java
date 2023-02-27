@@ -70,6 +70,11 @@ public class Review extends Timestamped {
         this.likeCount += 1;
     }
 
+    public void likeReviewDown(){
+        this.likeCount -= 1;
+    }
+
+
 
 
 

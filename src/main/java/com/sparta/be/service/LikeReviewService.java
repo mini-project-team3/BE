@@ -25,14 +25,15 @@ public class LikeReviewService {
     @Transactional
     public ApiResponseDto<?> likeReview(Long id, User user){
         //리뷰 확인
-        if (reviewRepository.findById(id).isEmpty()){
+        Optional<Review> review = reviewRepository.findById(id);
+        if (review.isEmpty()){
             return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST,"리뷰가 존재하지 않습니다."));
         }
-        Review review = reviewRepository.findById(id).get();
 
-        Optional<LikeReview> likes = likeReviewRepository.findByReviewAndUser(review,user);
+
+        Optional<LikeReview> likes = likeReviewRepository.findByReviewAndUser(review.get(),user);
         if (likes.isEmpty()){
-            review.likeReviewUp();
+            review.get().likeReviewUp();
             likeReviewRepository.save(likes.get());
         }else if (likes.isPresent()){
             return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST, "좋아요가 이미 되어있습니다."));
@@ -52,8 +53,11 @@ public class LikeReviewService {
 
         Optional<LikeReview> likes = likeReviewRepository.findByReviewAndUser(review.get(),user);
         if (!likes.isEmpty()) {
+            review.get().likeReviewDown();
             likeReviewRepository.delete(likes.get());
             likeReviewRepository.flush();
+        }else {
+            review.get().getLikeCount(); // 이미 지워졌을때 누르면 좋아요 숫자만 보여주는식으로 한다.
         }
 
         return ResponseUtils.ok();
