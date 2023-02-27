@@ -1,6 +1,7 @@
 package com.sparta.be.service;
 
 import com.sparta.be.common.ApiResponseDto;
+import com.sparta.be.common.ErrorType;
 import com.sparta.be.common.ResponseUtils;
 import com.sparta.be.dto.ReviewDetailResponseDto;
 import com.sparta.be.dto.ReviewRequestDto;
@@ -59,6 +60,8 @@ public class ReviewService {
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
         Page<ReviewResponseDto> page = reviewRepository.findAll(pageable).map(ReviewResponseDto::from);
 
+        checkInvalidPage(pageNo, page.getTotalElements());
+
         return ResponseUtils.ok(page.getContent());
     }
 
@@ -66,10 +69,16 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public ApiResponseDto<List<ReviewResponseDto>> getReviewsByCategory(Long id, int pageNo, String criteria) {
 
+        if (id <= 0 || id > CategoryType.values().length) {
+            throw new IllegalArgumentException(ErrorType.NOT_EXISTING_CATEGORY.getMessage());
+        }
+
         CategoryType category = CategoryType.valueOf("C" + id);
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
 
         Page<ReviewResponseDto> reviewPage = reviewRepository.findAllByCategoryListCategoryCategoryType(category, pageable).map(ReviewResponseDto::from);
+
+        checkInvalidPage(pageNo, reviewPage.getTotalElements());
 
         return ResponseUtils.ok(reviewPage.getContent());
     }
@@ -97,30 +106,44 @@ public class ReviewService {
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
         Page<ReviewResponseDto> page = reviewRepository.findAllByUser(user, pageable).map(ReviewResponseDto::from);
 
+        checkInvalidPage(pageNo, page.getTotalElements());
+
         return ResponseUtils.ok(page.getContent());
     }
 
     //게시글 수정
     @Transactional
-    public ApiResponseDto<?> update(Long id, ReviewRequestDto requestDto) {
+    public ApiResponseDto update(Long id, ReviewRequestDto requestDto) {
+
         Review review = getReviewById(id);
+
         review.update(requestDto);
         reviewRepository.flush();
+
         return ResponseUtils.ok();
     }
 
     //게시글 삭제
     @Transactional
-    public ApiResponseDto<?> deleteReview(Long id) {
+    public ApiResponseDto deleteReview(Long id) {
+
         Review review = getReviewById(id);
+
         reviewRepository.deleteById(review.getId());
+
         return ResponseUtils.ok();
     }
 
     private Review getReviewById(Long id) {
         return reviewRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("유저가 존재하지 않습니다.")
+                () -> new IllegalArgumentException(ErrorType.NOT_FOUND_REVIEW_WRITING.getMessage())
         );
+    }
+
+    private void checkInvalidPage(int pageNo, Long totalElements) {
+        if (pageNo > totalElements / PAGE_SIZE) {
+            throw new IllegalArgumentException(ErrorType.NOT_EXISTING_PAGE.getMessage());
+        }
     }
 
 }
