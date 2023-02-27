@@ -15,6 +15,8 @@ public class CommentResponseDto {
     private String nickname;
     private String contents;
 
+    private int likeCount;
+
     @Builder
     private CommentResponseDto(Long id, String nickname, String contents) {
         this.id = id;

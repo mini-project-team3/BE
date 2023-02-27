@@ -30,18 +30,21 @@ public class Review extends Timestamped {
     private User user;
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
+    private List<LikeReview> likeReviewList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
     private List<ReviewCategory> categoryList = new ArrayList<>();
 
     private int likeCount;
-
     @Builder
     private Review(ReviewRequestDto requestDto, List<ReviewCategory> categoryList, User user) {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
         this.categoryList = categoryList;
+        this.likeCount = 0;
         this.user = user;
     }
 
@@ -57,9 +60,22 @@ public class Review extends Timestamped {
         this.getCategoryList().add(reviewCategory);
     }
 
+
     public void update(ReviewRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
     }
+
+    public void likeReviewUp(){
+        this.likeCount += 1;
+    }
+
+    public void likeReviewDown(){
+        this.likeCount -= 1;
+    }
+
+
+
+
 
 }
