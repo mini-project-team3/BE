@@ -9,29 +9,27 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/reviews")
 @RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commentService;
 
     //댓글 생성
-    @PostMapping("reviews")
-    public ApiResponseDto<?> createComment(@RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return commentService.createComment(requestDto, userDetails.getUser());
+    @PostMapping("/api/reviews/{id}")
+    public ApiResponseDto<?> createComment(@PathVariable Long id, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return commentService.createComment(id, requestDto, userDetails.getUser());
     }
 
-    //게시글 수정
-    @PutMapping("/{id}")
+    //댓글 수정
+    @PutMapping("/api/comments/{id}")
     public ApiResponseDto<?> updateComment(@PathVariable Long id, @RequestBody CommentRequestDto requestDto) {
         return commentService.updateComment(id, requestDto);
     }
 
-    //게시글 삭제
-    @DeleteMapping("/{id}")
+    //댓글 삭제
+    @DeleteMapping("/api/comments/{id}")
     public ApiResponseDto<?> deleteComment(@PathVariable Long id) {
         return commentService.deleteComment(id);
 
     }
 }
-
