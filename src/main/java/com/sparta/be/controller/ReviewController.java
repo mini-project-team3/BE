@@ -53,6 +53,13 @@ public class ReviewController {
         return reviewService.getMyReviews(pageNo, criteria, userDetails.getUser());
     }
 
+    // 내가 좋아요한 리뷰 조회
+    @GetMapping("/api/reviews/likes")
+    public ApiResponseDto<List<ReviewResponseDto>> getMyLikeReviews(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+                                                                @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria) {
+        return reviewService.getMyLikeReviews(pageNo, criteria, userDetails.getUser());
+    }
 
     //게시글 수정
     @PutMapping("/api/reviews/{id}")

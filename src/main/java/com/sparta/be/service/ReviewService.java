@@ -101,12 +101,23 @@ public class ReviewService {
     }
 
     // 내가 쓴 리뷰 조회
+    @Transactional(readOnly = true)
     public ApiResponseDto<List<ReviewResponseDto>> getMyReviews(int pageNo, String criteria, User user) {
 
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
         Page<ReviewResponseDto> page = reviewRepository.findAllByUser(user, pageable).map(ReviewResponseDto::from);
 
         checkInvalidPage(pageNo, page.getTotalElements());
+
+        return ResponseUtils.ok(page.getContent());
+    }
+
+    // 내가 좋아요한 리뷰 조회
+    @Transactional(readOnly = true)
+    public ApiResponseDto<List<ReviewResponseDto>> getMyLikeReviews(int pageNo, String criteria, User user) {
+
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
+        Page<ReviewResponseDto> page = reviewRepository.findAllByLikeReviewListUser(user, pageable).map(ReviewResponseDto::from);
 
         return ResponseUtils.ok(page.getContent());
     }
