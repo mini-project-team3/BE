@@ -16,6 +16,15 @@ public class ReviewResponseDto {
     private int likeCount;
 
 
+
+    public ReviewResponseDto(Review review) {
+        this.id = review.getId();
+        this.title = review.getTitle();
+        this.nickname = review.getUser().getNickname();
+        this.createdAt = review.getCreatedAt();
+        this.likeCount = review.getLikeReviewList() != null ? review.getLikeReviewList().size() : 0; // 좋아요 갯수 반환
+    }
+
     @Builder
     public ReviewResponseDto(Long id, String title, String nickname, LocalDateTime createdAt, int likeCount) {
         this.id = id;

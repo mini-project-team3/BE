@@ -5,9 +5,9 @@ import com.sparta.be.common.ResponseUtils;
 import com.sparta.be.dto.ReviewDetailResponseDto;
 import com.sparta.be.dto.ReviewRequestDto;
 import com.sparta.be.dto.ReviewResponseDto;
-import com.sparta.be.entity.CategoryType;
-import com.sparta.be.entity.Review;
-import com.sparta.be.entity.User;
+import com.sparta.be.entity.*;
+import com.sparta.be.repository.CategoryRepository;
+import com.sparta.be.repository.ReviewCategoryRepository;
 import com.sparta.be.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -23,17 +23,31 @@ import java.util.Optional;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
+    private final CategoryRepository categoryRepository;
+    private final ReviewCategoryRepository reviewCategoryRepository;
     private static final int PAGE_SIZE = 10;
 
     //게시글 작성
+    @Transactional
     public ApiResponseDto createReview(ReviewRequestDto requestDto, User user) {
 
-        List<CategoryType> categoryList = new ArrayList<>();
-        for (String category : requestDto.getCategoryList()) {
-            categoryList.add(CategoryType.valueOf(category));
+        Review review = Review.of(requestDto, user);
+        List<ReviewCategory> categoryList = new ArrayList<>();
+
+        for (String requestCategory : requestDto.getCategoryList()) {
+            Category category = Category.of(CategoryType.valueOf(requestCategory));
+
+            ReviewCategory reviewCategory = ReviewCategory.of(review, category);
+            reviewCategoryRepository.save(reviewCategory);
+
+            review.addCategory(reviewCategory);
+            category.addCategory(reviewCategory);
+            categoryRepository.save(category);
+
+            categoryList.add(reviewCategory);
         }
 
-        reviewRepository.save(Review.of(requestDto, categoryList, user));
+        reviewRepository.save(review);
 
         return ResponseUtils.ok();
     }
@@ -46,7 +60,6 @@ public class ReviewService {
         Page<ReviewResponseDto> page = reviewRepository.findAll(pageable).map(ReviewResponseDto::from);
 
         return ResponseUtils.ok(page.getContent());
-
     }
 
     // 카테고리별 게시글 조회
@@ -54,19 +67,9 @@ public class ReviewService {
     public ApiResponseDto<List<ReviewResponseDto>> getReviewsByCategory(Long id, int pageNo, String criteria) {
 
         CategoryType category = CategoryType.valueOf("C" + id);
-
-        List<Review> reviewsAll = reviewRepository.findAll();
-        List<ReviewResponseDto> selectedReviews = new ArrayList<>();
-        for (Review review : reviewsAll) {
-            if (review.getCategoryList().contains(category)) {
-                selectedReviews.add(ReviewResponseDto.from(review));
-            }
-        }
-
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), selectedReviews.size());
-        Page<ReviewResponseDto> reviewPage = new PageImpl<>(selectedReviews.subList(start, end), pageable, selectedReviews.size());
+
+        Page<ReviewResponseDto> reviewPage = reviewRepository.findAllByCategoryListCategoryCategoryType(category, pageable).map(ReviewResponseDto::from);
 
         return ResponseUtils.ok(reviewPage.getContent());
     }
@@ -86,6 +89,15 @@ public class ReviewService {
         ReviewDetailResponseDto responseDto = ReviewDetailResponseDto.from(review, isWriter);
 
         return ResponseUtils.ok(responseDto);
+    }
+
+    // 내가 쓴 리뷰 조회
+    public ApiResponseDto<List<ReviewResponseDto>> getMyReviews(int pageNo, String criteria, User user) {
+
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
+        Page<ReviewResponseDto> page = reviewRepository.findAllByUser(user, pageable).map(ReviewResponseDto::from);
+
+        return ResponseUtils.ok(page.getContent());
     }
 
     //게시글 수정
