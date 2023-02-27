@@ -4,6 +4,7 @@ import com.sparta.be.common.ApiResponseDto;
 import com.sparta.be.common.ErrorResponse;
 import com.sparta.be.common.ResponseUtils;
 import com.sparta.be.entity.*;
+import com.sparta.be.repository.CommentRepository;
 import com.sparta.be.repository.LikeCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,20 +19,20 @@ public class LikeCommnetService {
 
     private final LikeCommentRepository likeCommentRepository;
 
-    /*private final CommentRepsoitory commentRepsoitory;
+    private final CommentRepository commentRepsoitory;
 
     @Transactional
     public ApiResponseDto<?> likeComment(Long id, User user){
         //댓글 확인
         Optional<Comment> comment = commentRepsoitory.findById(id);
         if (comment.isEmpty()){
-            return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST,"리뷰가 존재하지 않습니다."));
+            return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST,"댓글이 존재하지 않습니다."));
         }
 
 
         Optional<LikeComment> found = likeCommentRepository.findByCommentAndUser(comment.get(),user);
         if (found.isEmpty()){
-             review.get().likeCommentUp();
+             comment.get().likeCommentUp();
             LikeComment likeComment = LikeComment.of(comment.get(), user);
             likeCommentRepository.save(likeComment);
         }else {
@@ -46,13 +47,13 @@ public class LikeCommnetService {
         //댓글 확인
         Optional<Comment> comment = commentRepsoitory.findById(id);
         if (comment.isEmpty()){
-            return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST,"리뷰가 존재하지 않습니다."));
+            return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST,"댓글이 존재하지 않습니다."));
         }
 
 
         Optional<LikeComment> found = likeCommentRepository.findByCommentAndUser(comment.get(),user);
         if (found.isPresent()) {
-            review.get().likeCommentDown();
+            comment.get().likeCommentDown();
             likeCommentRepository.delete(found.get());
             likeCommentRepository.flush();
         }else {
@@ -60,7 +61,7 @@ public class LikeCommnetService {
         }
 
         return ResponseUtils.ok();
-    }*/
+    }
 
 
 }

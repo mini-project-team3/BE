@@ -34,10 +34,12 @@ public class Comment extends Timestamped{
     @OneToMany(mappedBy = "comment")
     private List<LikeComment> likeCommentList = new ArrayList<>();
 
+    private int likeCount;
     public Comment(CommentRequestDto requestDto, User user, Review review) {
         this.contents = requestDto.getContents();
         this.user = user;
         this.review = review;
+        this.likeCount = 0;
     }
     
     public void update(CommentRequestDto requestDto) {
@@ -45,12 +47,12 @@ public class Comment extends Timestamped{
     }
 
 
-    /*public void likeCommentUp(){
+    public void likeCommentUp(){
         this.likeCount += 1;
     }
 
     public void likeCommentDown(){
         this.likeCount -= 1;
-    }*/
+    }
 
 }

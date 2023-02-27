@@ -18,7 +18,7 @@ public class CommentResponseDto {
     private int likeCount;
 
     @Builder
-    private CommentResponseDto(Long id, String nickname, String contents) {
+    private CommentResponseDto(Long id, String nickname, String contents, int likeCount) {
         this.id = id;
         this.nickname = nickname;
         this.contents = contents;
@@ -29,6 +29,7 @@ public class CommentResponseDto {
                 .id(entity.getId())
                 .nickname(entity.getUser().getNickname())
                 .contents(entity.getContents())
+                .likeCount(entity.getLikeCount())
                 .build();
     }
 }
