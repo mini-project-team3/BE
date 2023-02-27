@@ -12,12 +12,12 @@ import java.util.Collection;
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;
-    private final String username;
+    private final String loginId;
 
     // 인증이 완료된 사용자 추가하기
     public UserDetailsImpl(User user, String loginId) {
         this.user = user;
-        this.username = loginId;
+        this.loginId = loginId;
     }
 
     public User getUser() {
@@ -41,7 +41,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.username;
+        return this.loginId;
     }
 
     @Override

@@ -23,7 +23,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         ErrorType exception = (ErrorType) request.getAttribute("exception");
 
         if (exception.equals(ErrorType.NOT_TOKEN)) {
-            System.out.println("여기서 에러 발생한 거 맞음");
             exceptionHandler(response, ErrorType.NOT_TOKEN);
             return;
         }
