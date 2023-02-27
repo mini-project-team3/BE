@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class LikeReviewService {
@@ -28,9 +30,12 @@ public class LikeReviewService {
         }
         Review review = reviewRepository.findById(id).get();
 
-        LikeReview likes = likeReviewRepository.findByReviewAndUser(review,user).get();
-        if (likeReviewRepository.findByReviewAndUser(review, user).isEmpty()){
-            likeReviewRepository.save(likes);
+        Optional<LikeReview> likes = likeReviewRepository.findByReviewAndUser(review,user);
+        if (likes.isEmpty()){
+            review.likeReviewUp();
+            likeReviewRepository.save(likes.get());
+        }else if (likes.isPresent()){
+            return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST, "좋아요가 이미 되어있습니다."));
         }
 
             return ResponseUtils.ok();
@@ -39,14 +44,15 @@ public class LikeReviewService {
     @Transactional
     public ApiResponseDto<?> likeCancelReview(Long id, User user){
         //리뷰 확인
-        if (reviewRepository.findById(id).isEmpty()){
+        Optional<Review> review = reviewRepository.findById(id);
+        if (review.isEmpty()){
             return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST,"리뷰가 존재하지 않습니다."));
         }
-        Review review = reviewRepository.findById(id).get();
 
-        LikeReview likes = likeReviewRepository.findByReviewAndUser(review,user).get();
-        if (!likeReviewRepository.findByReviewAndUser(review, user).isEmpty()) {
-            likeReviewRepository.delete(likes);
+
+        Optional<LikeReview> likes = likeReviewRepository.findByReviewAndUser(review.get(),user);
+        if (!likes.isEmpty()) {
+            likeReviewRepository.delete(likes.get());
             likeReviewRepository.flush();
         }
 
