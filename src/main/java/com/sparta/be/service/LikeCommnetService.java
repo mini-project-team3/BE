@@ -10,25 +10,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class LikeCommnetService {
 
     private final LikeCommentRepository likeCommentRepository;
 
-    private final CommentRepsoitory commentRepsoitory;
+    /*private final CommentRepsoitory commentRepsoitory;
 
     @Transactional
     public ApiResponseDto<?> likeComment(Long id, User user){
         //댓글 확인
-        if (commentRepsoitory.findById(id).isEmpty()){
+        Optional<Comment> comment = commentRepsoitory.findById(id);
+        if (comment.isEmpty()){
             return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST,"리뷰가 존재하지 않습니다."));
         }
-        Review review = commentRepsoitory.findById(id).get();
 
-        LikeComment likeComment = likeCommentRepository.findByCommentAndUser(comment,user).get();
-        if (likeCommentRepository.findByCommentAndUser(comment, user).isEmpty()){
-            likeCommentRepository.save(likeComment);
+
+        Optional<LikeComment> likes = likeCommentRepository.findByCommentAndUser(comment.get(),user);
+        if (likes.isEmpty()){
+            likeCommentRepository.save(likes.get());
         }
 
         return ResponseUtils.ok();
@@ -37,20 +40,20 @@ public class LikeCommnetService {
     @Transactional
     public ApiResponseDto<?> likeCancelComment(Long id, User user){
         //댓글 확인
-        if (commentRepsoitory.findById(id).isEmpty()){
+        Optional<Comment> comment = commentRepsoitory.findById(id);
+        if (comment.isEmpty()){
             return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST,"리뷰가 존재하지 않습니다."));
         }
 
-        Comment comment = commentRepsoitory.findById(id).get();
 
-        LikeComment likes = likeCommentRepository.findByCommentAndUser(comment,user).get();
-        if (!likeCommentRepository.findByCommentAndUser(comment, user).isEmpty()) {
-            likeCommentRepository.delete(likes);
+        Optional<LikeComment> likes = likeCommentRepository.findByCommentAndUser(comment.get(),user);
+        if (!likes.isEmpty()) {
+            likeCommentRepository.delete(likes.get());
             likeCommentRepository.flush();
         }
 
         return ResponseUtils.ok();
-    }
+    }*/
 
 
 }

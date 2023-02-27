@@ -15,7 +15,7 @@ public class LikeCommentController { // 댓글 좋아요
     private final LikeCommnetService likeCommnetService;
 
 
-    @PostMapping("/likes/{id}")
+    /*@PostMapping("/likes/{id}")
     public ApiResponseDto<?> likeComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return likeCommnetService.likeComment(id, userDetails.getUser());
     }
@@ -23,6 +23,6 @@ public class LikeCommentController { // 댓글 좋아요
     @DeleteMapping("/likes/{id}")
     public ApiResponseDto<?> likeCancelReview(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return likeCommnetService.likeCancelComment(id, userDetails.getUser());
-    }
+    }*/
 
 }
