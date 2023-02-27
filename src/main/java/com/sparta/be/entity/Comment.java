@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@Table(name = "comment")
 @NoArgsConstructor
 public class Comment extends Timestamped{
 

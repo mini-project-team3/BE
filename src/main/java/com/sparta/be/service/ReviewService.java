@@ -145,5 +145,4 @@ public class ReviewService {
             throw new IllegalArgumentException(ErrorType.NOT_EXISTING_PAGE.getMessage());
         }
     }
-
 }

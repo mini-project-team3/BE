@@ -10,6 +10,7 @@ import java.util.List;
 
 @Getter
 @Entity
+@Table(name = "CATEGORY")
 @NoArgsConstructor
 public class Category {
 
