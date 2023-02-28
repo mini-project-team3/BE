@@ -6,9 +6,8 @@ public class ResponseUtils {
         return new SuccessResponseDto<T>(true, data);
     }
 
-
-    public static <T>FailureResponseDto<T> error(ErrorResponse error) {
-        return new FailureResponseDto<T>(false, error);
+    public static FailureResponseDto error(ErrorResponse error) {
+        return new FailureResponseDto(false, error);
     }
 
     public static <T> SuccessResponseDto<T> ok() {

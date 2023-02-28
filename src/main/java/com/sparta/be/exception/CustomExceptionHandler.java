@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class CustomExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<FailureResponseDto<ErrorResponse>> illegalArgumentException(IllegalArgumentException e) {
+    public ResponseEntity<FailureResponseDto> illegalArgumentException(IllegalArgumentException e) {
         ErrorResponse response = ErrorResponse.of(e.getMessage());
         log.error(response.getMessage());
         return ResponseEntity.badRequest().body(ResponseUtils.error(response));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<FailureResponseDto<ErrorResponse>> methodValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<FailureResponseDto> methodValidException(MethodArgumentNotValidException e) {
         ErrorResponse response = ErrorResponse.of(e.getBindingResult());
         log.error(response.getMessage());
         return ResponseEntity.badRequest().body(ResponseUtils.error(response));
