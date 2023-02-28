@@ -15,12 +15,12 @@ public class LikeReviewController { // 게시글 좋아요
     private final LikeReviewService likeReviewService;
 
     @PostMapping("/likes/{id}")
-    public ApiResponseDto<?> likeReview(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ApiResponseDto<Void> likeReview(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return likeReviewService.likeReview(id, userDetails.getUser());
     }
 
     @DeleteMapping("/likes/{id}")
-    public ApiResponseDto<?> likeCancelReview(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ApiResponseDto<Void> likeCancelReview(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return likeReviewService.likeCancelReview(id, userDetails.getUser());
     }
 

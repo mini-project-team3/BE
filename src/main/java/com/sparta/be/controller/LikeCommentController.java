@@ -16,12 +16,12 @@ public class LikeCommentController { // 댓글 좋아요
 
 
     @PostMapping("/likes/{id}")
-    public ApiResponseDto<?> likeComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ApiResponseDto<Void> likeComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return likeCommnetService.likeComment(id, userDetails.getUser());
     }
 
     @DeleteMapping("/likes/{id}")
-    public ApiResponseDto<?> likeCancelReview(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ApiResponseDto<Void> likeCancelReview(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return likeCommnetService.likeCancelComment(id, userDetails.getUser());
     }
 

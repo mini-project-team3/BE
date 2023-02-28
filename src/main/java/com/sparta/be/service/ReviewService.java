@@ -55,32 +55,26 @@ public class ReviewService {
 
     //전체 게시글 조회
     @Transactional(readOnly = true)
-    public ApiResponseDto<List<ReviewResponseDto>> getReviews(int pageNo, String criteria) {
+    public ApiResponseDto<List<ReviewResponseDto>> getReviews(int category, int pageNo, String criteria) {
+
+        if (category > CategoryType.values().length) {
+            throw new IllegalArgumentException(ErrorType.NOT_EXISTING_CATEGORY.getMessage());
+        }
 
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
-        Page<ReviewResponseDto> page = reviewRepository.findAll(pageable).map(ReviewResponseDto::from);
+        Page<ReviewResponseDto> page;
+
+        if (category == 0) {
+            page = reviewRepository.findAll(pageable).map(ReviewResponseDto::from);
+        } else {
+            CategoryType categoryType = CategoryType.valueOf("C" + category);
+            page = reviewRepository.findAllByCategoryListCategoryCategoryType(categoryType, pageable)
+                    .map(ReviewResponseDto::from);
+        }
 
         checkInvalidPage(pageNo, page.getTotalElements());
 
         return ResponseUtils.ok(page.getContent());
-    }
-
-    // 카테고리별 게시글 조회
-    @Transactional(readOnly = true)
-    public ApiResponseDto<List<ReviewResponseDto>> getReviewsByCategory(Long id, int pageNo, String criteria) {
-
-        if (id <= 0 || id > CategoryType.values().length) {
-            throw new IllegalArgumentException(ErrorType.NOT_EXISTING_CATEGORY.getMessage());
-        }
-
-        CategoryType category = CategoryType.valueOf("C" + id);
-        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
-
-        Page<ReviewResponseDto> reviewPage = reviewRepository.findAllByCategoryListCategoryCategoryType(category, pageable).map(ReviewResponseDto::from);
-
-        checkInvalidPage(pageNo, reviewPage.getTotalElements());
-
-        return ResponseUtils.ok(reviewPage.getContent());
     }
 
     // 게시글 상세 조회
