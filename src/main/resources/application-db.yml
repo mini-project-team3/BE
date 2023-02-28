@@ -43,13 +43,14 @@ spring:
     show-sql: true
     database: MYSQL
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.3:3306/book_reviews?serverTimezone=UTC&characterEncoding=UTF-8
-    username: root
-    password: 1234
+    url: secret
+    username: admin
+    password: 123456789
+

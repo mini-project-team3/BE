@@ -22,22 +22,22 @@ public class Category {
     private CategoryType categoryType;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
-    private List<ReviewCategory> categoryList = new ArrayList<>();
+    private List<ReviewCategory> reviewList = new ArrayList<>();
 
     @Builder
-    private Category(CategoryType categoryType, List<ReviewCategory> categoryList) {
+    private Category(CategoryType categoryType, List<ReviewCategory> reviewList) {
         this.categoryType = categoryType;
-        this.categoryList = categoryList;
+        this.reviewList = reviewList;
     }
 
     public static Category of(CategoryType categoryType) {
         return Category.builder()
                 .categoryType(categoryType)
-                .categoryList(new ArrayList<>())
+                .reviewList(new ArrayList<>())
                 .build();
     }
 
     public void addCategory(ReviewCategory reviewCategory) {
-        this.getCategoryList().add(reviewCategory);
+        this.getReviewList().add(reviewCategory);
     }
 }
