@@ -4,17 +4,13 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class ApiResponseDto<T> {
-
+public class FailureResponseDto<T> {
     private boolean success;
-    private T data;
     private ErrorResponse error;
 
     @Builder
-    public ApiResponseDto(boolean success, T data, ErrorResponse error) {
+    public FailureResponseDto(boolean success, ErrorResponse error) {
         this.success = success;
-        this.data = data;
         this.error = error;
     }
-
 }
