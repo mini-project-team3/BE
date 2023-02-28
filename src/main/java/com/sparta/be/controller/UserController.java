@@ -1,6 +1,6 @@
 package com.sparta.be.controller;
 
-import com.sparta.be.common.ApiResponseDto;
+import com.sparta.be.common.SuccessResponseDto;
 import com.sparta.be.dto.LoginRequestDto;
 import com.sparta.be.dto.SignupRequestDto;
 import com.sparta.be.service.UserService;
@@ -20,12 +20,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ApiResponseDto<Void> signup(@Valid @RequestBody SignupRequestDto signupRequestDto){
+    public SuccessResponseDto<Void> signup(@Valid @RequestBody SignupRequestDto signupRequestDto){
         return userService.signup(signupRequestDto);
     }
 
     @PostMapping("/login")
-    public ApiResponseDto<Void> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
+    public SuccessResponseDto<Void> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response){
         return userService.login(loginRequestDto, response);
     }
 }
