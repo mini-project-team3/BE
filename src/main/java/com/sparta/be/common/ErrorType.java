@@ -15,8 +15,9 @@ public enum ErrorType {
     NOT_FOUND_REVIEW_WRITING(400, "리뷰가 존재하지 않습니다."),
     NOT_FOUND_COMMENT_WRITING(400, "댓글이 존재하지 않습니다."),
     NOT_EXISTING_CATEGORY(400, "해당 카테고리가 존재하지 않습니다."),
-    NOT_EXISTING_PAGE(400, "해당 페이지 번호에는 데이터가 존재하지 않습니다.");
-
+    NOT_EXISTING_PAGE(400, "해당 페이지 번호에는 데이터가 존재하지 않습니다."),
+    LIKE_ALREADY_DONE(400,"좋아요가 이미 되어있습니다."),
+    LIKE_CANCLE_ALREADY_DONE(400,"좋아요가 이미 취소 되어있습니다.");
     private int code;
     private String message;
 

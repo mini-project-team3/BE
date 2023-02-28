@@ -1,13 +1,14 @@
 package com.sparta.be.service;
 
 import com.sparta.be.common.ApiResponseDto;
-import com.sparta.be.common.ErrorResponse;
+import com.sparta.be.common.ErrorType;
 import com.sparta.be.common.ResponseUtils;
-import com.sparta.be.entity.*;
+import com.sparta.be.entity.Comment;
+import com.sparta.be.entity.LikeComment;
+import com.sparta.be.entity.User;
 import com.sparta.be.repository.CommentRepository;
 import com.sparta.be.repository.LikeCommentRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +23,11 @@ public class LikeCommnetService {
     private final CommentRepository commentRepsoitory;
 
     @Transactional
-    public ApiResponseDto<?> likeComment(Long id, User user){
+    public ApiResponseDto<Void> likeComment(Long id, User user){
         //댓글 확인
         Optional<Comment> comment = commentRepsoitory.findById(id);
         if (comment.isEmpty()){
-            return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST,"댓글이 존재하지 않습니다."));
+            throw new IllegalArgumentException(ErrorType.NOT_FOUND_COMMENT_WRITING.getMessage());
         }
 
 
@@ -36,18 +37,18 @@ public class LikeCommnetService {
             LikeComment likeComment = LikeComment.of(comment.get(), user);
             likeCommentRepository.save(likeComment);
         }else {
-            return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST, "좋아요가 이미 되어있습니다."));
+            throw new IllegalArgumentException(ErrorType.LIKE_ALREADY_DONE.getMessage());
         }
 
         return ResponseUtils.ok();
     }
 
     @Transactional
-    public ApiResponseDto<?> likeCancelComment(Long id, User user){
+    public ApiResponseDto<Void> likeCancelComment(Long id, User user){
         //댓글 확인
         Optional<Comment> comment = commentRepsoitory.findById(id);
         if (comment.isEmpty()){
-            return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST,"댓글이 존재하지 않습니다."));
+            throw new IllegalArgumentException(ErrorType.NOT_FOUND_COMMENT_WRITING.getMessage());
         }
 
 
@@ -57,7 +58,7 @@ public class LikeCommnetService {
             likeCommentRepository.delete(found.get());
             likeCommentRepository.flush();
         }else {
-            return ResponseUtils.error(ErrorResponse.of(HttpStatus.BAD_REQUEST, "좋아요가 이미 취소 되어있습니다."));
+            throw new IllegalArgumentException(ErrorType.LIKE_CANCLE_ALREADY_DONE.getMessage());
         }
 
         return ResponseUtils.ok();
