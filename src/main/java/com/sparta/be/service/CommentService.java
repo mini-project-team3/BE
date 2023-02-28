@@ -1,6 +1,7 @@
 package com.sparta.be.service;
 
-import com.sparta.be.common.ApiResponseDto;
+import com.sparta.be.common.ErrorType;
+import com.sparta.be.common.SuccessResponseDto;
 import com.sparta.be.common.ResponseUtils;
 import com.sparta.be.dto.CommentRequestDto;
 import com.sparta.be.entity.Comment;
@@ -23,16 +24,13 @@ public class CommentService {
 
     //댓글 생성
     @Transactional
-    public ApiResponseDto<?> createComment(Long id, CommentRequestDto requestDto, User user) {
-//        Review review = reviewRepository.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException("해당하는 리뷰가 없습니다."));
-////
+    public SuccessResponseDto<Void> createComment(Long id, CommentRequestDto requestDto, User user) {
+
         Optional<Review> review = reviewRepository.findById(id);
         if(review.isEmpty()) {
-            throw new IllegalArgumentException("해당하는 리뷰가 없습니다.");
+            throw new IllegalArgumentException(ErrorType.NOT_FOUND_REVIEW_WRITING.getMessage());
         }
 
-//        Comment comment = new Comment(requestDto, user, review);
         Comment comment = new Comment(requestDto, user, review.get());
         commentRepository.saveAndFlush(comment);
         return ResponseUtils.ok();
@@ -40,10 +38,10 @@ public class CommentService {
 
     //댓글 수정
     @Transactional
-    public ApiResponseDto<?> updateComment(Long id, CommentRequestDto requestDto) {
+    public SuccessResponseDto<Void> updateComment(Long id, CommentRequestDto requestDto) {
         Optional<Comment> comment = commentRepository.findById(id);
         if (comment.isEmpty()) {
-            throw new IllegalArgumentException("해당하는 댓글이 없습니다.");
+            throw new IllegalArgumentException(ErrorType.NOT_FOUND_COMMENT_WRITING.getMessage());
         }
         comment.get().update(requestDto);
         commentRepository.flush();
@@ -52,10 +50,10 @@ public class CommentService {
 
     //댓글 삭제
     @Transactional
-    public ApiResponseDto<?> deleteComment(Long id) {
+    public SuccessResponseDto<Void> deleteComment(Long id) {
         Optional<Comment> comment = commentRepository.findById(id);
         if (comment.isEmpty()) {
-            throw new IllegalArgumentException("해당하는 댓글이 없습니다.");
+            throw new IllegalArgumentException(ErrorType.NOT_FOUND_COMMENT_WRITING.getMessage());
         }
         commentRepository.deleteById(id);
         return ResponseUtils.ok();
