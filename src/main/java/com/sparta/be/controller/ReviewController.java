@@ -38,15 +38,6 @@ public class ReviewController {
         return reviewService.getReview(id, userDetails.getUser());
     }
 
-    // 카테고리별 게시글 조회
-//    @GetMapping("/api/reviews/category/{id}")
-//    public ApiResponseDto<List<ReviewResponseDto>> getReviewsByCategory(@PathVariable Long id,
-//                                                                        @RequestParam(required = false, defaultValue = "0", value = "category") int category,
-//                                                                        @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
-//                                                                        @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria) {
-//        return reviewService.getReviewsByCategory(id, category, pageNo, criteria);
-//    }
-
     // 내가 쓴 리뷰 조회
     @GetMapping("/api/myreviews")
     public ApiResponseDto<List<ReviewResponseDto>> getMyReviews(@AuthenticationPrincipal UserDetailsImpl userDetails,
