@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/users")
+@RequestMapping(value = "/api/users", produces = "application/json; charset=utf8")
 public class UserController {
 
     private final UserService userService;

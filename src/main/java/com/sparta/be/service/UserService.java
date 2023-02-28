@@ -38,6 +38,11 @@ public class UserService {
             throw new IllegalArgumentException(ErrorType.DUPLICATED_USERNAME.getMessage());
         }
 
+        Optional<User> nickNameFound = userRepository.findByNickname(nickname);
+        if(nickNameFound.isPresent()){
+            throw new IllegalArgumentException(ErrorType.DUPLICATED_NICKNAME.getMessage());
+        }
+
         User user = new User(loginId, password, nickname);
         userRepository.save(user);
         return ResponseUtils.ok();
