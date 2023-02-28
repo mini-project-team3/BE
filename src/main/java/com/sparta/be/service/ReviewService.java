@@ -1,6 +1,6 @@
 package com.sparta.be.service;
 
-import com.sparta.be.common.ApiResponseDto;
+import com.sparta.be.common.SuccessResponseDto;
 import com.sparta.be.common.ErrorType;
 import com.sparta.be.common.ResponseUtils;
 import com.sparta.be.dto.ReviewDetailResponseDto;
@@ -30,7 +30,7 @@ public class ReviewService {
 
     //게시글 작성
     @Transactional
-    public ApiResponseDto<Void> createReview(ReviewRequestDto requestDto, User user) {
+    public SuccessResponseDto<Void> createReview(ReviewRequestDto requestDto, User user) {
 
         Review review = Review.of(requestDto, user);
         List<ReviewCategory> categoryList = new ArrayList<>();
@@ -55,7 +55,7 @@ public class ReviewService {
 
     //전체 게시글 조회
     @Transactional(readOnly = true)
-    public ApiResponseDto<List<ReviewResponseDto>> getReviews(int category, int pageNo, String criteria) {
+    public SuccessResponseDto<List<ReviewResponseDto>> getReviews(int category, int pageNo, String criteria) {
 
         if (category > CategoryType.values().length) {
             throw new IllegalArgumentException(ErrorType.NOT_EXISTING_CATEGORY.getMessage());
@@ -79,7 +79,7 @@ public class ReviewService {
 
     // 게시글 상세 조회
     @Transactional(readOnly = true)
-    public ApiResponseDto<ReviewDetailResponseDto> getReview(Long id, User user) {
+    public SuccessResponseDto<ReviewDetailResponseDto> getReview(Long id, User user) {
 
         Review review = getReviewById(id);
 
@@ -96,7 +96,7 @@ public class ReviewService {
 
     // 내가 쓴 리뷰 조회
     @Transactional(readOnly = true)
-    public ApiResponseDto<List<ReviewResponseDto>> getMyReviews(int pageNo, String criteria, User user) {
+    public SuccessResponseDto<List<ReviewResponseDto>> getMyReviews(int pageNo, String criteria, User user) {
 
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
         Page<ReviewResponseDto> page = reviewRepository.findAllByUser(user, pageable).map(ReviewResponseDto::from);
@@ -108,7 +108,7 @@ public class ReviewService {
 
     // 내가 좋아요한 리뷰 조회
     @Transactional(readOnly = true)
-    public ApiResponseDto<List<ReviewResponseDto>> getMyLikeReviews(int pageNo, String criteria, User user) {
+    public SuccessResponseDto<List<ReviewResponseDto>> getMyLikeReviews(int pageNo, String criteria, User user) {
 
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
         Page<ReviewResponseDto> page = reviewRepository.findAllByLikeReviewListUser(user, pageable).map(ReviewResponseDto::from);
@@ -118,7 +118,7 @@ public class ReviewService {
 
     //게시글 수정
     @Transactional
-    public ApiResponseDto<Void> update(Long id, ReviewRequestDto requestDto) {
+    public SuccessResponseDto<Void> update(Long id, ReviewRequestDto requestDto) {
 
         Review review = getReviewById(id);
 
@@ -130,7 +130,7 @@ public class ReviewService {
 
     //게시글 삭제
     @Transactional
-    public ApiResponseDto<Void> deleteReview(Long id) {
+    public SuccessResponseDto<Void> deleteReview(Long id) {
 
         Review review = getReviewById(id);
 

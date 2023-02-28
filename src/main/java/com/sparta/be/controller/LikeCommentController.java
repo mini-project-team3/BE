@@ -1,6 +1,6 @@
 package com.sparta.be.controller;
 
-import com.sparta.be.common.ApiResponseDto;
+import com.sparta.be.common.SuccessResponseDto;
 import com.sparta.be.security.UserDetailsImpl;
 import com.sparta.be.service.LikeCommnetService;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +16,12 @@ public class LikeCommentController { // 댓글 좋아요
 
 
     @PostMapping("/likes/{id}")
-    public ApiResponseDto<Void> likeComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public SuccessResponseDto<Void> likeComment(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return likeCommnetService.likeComment(id, userDetails.getUser());
     }
 
     @DeleteMapping("/likes/{id}")
-    public ApiResponseDto<Void> likeCancelReview(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public SuccessResponseDto<Void> likeCancelReview(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return likeCommnetService.likeCancelComment(id, userDetails.getUser());
     }
 
