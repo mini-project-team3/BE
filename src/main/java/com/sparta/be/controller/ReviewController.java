@@ -26,9 +26,10 @@ public class ReviewController {
 
     //게시글 전체 조회
     @GetMapping("/api/reviews")
-    public ApiResponseDto<List<ReviewResponseDto>> getReviews(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+    public ApiResponseDto<List<ReviewResponseDto>> getReviews(@RequestParam(required = false, defaultValue = "0", value = "category") int category,
+                                                              @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
                                                               @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria) {
-        return reviewService.getReviews(pageNo, criteria);
+        return reviewService.getReviews(category, pageNo, criteria);
     }
 
     // 게시글 상세 조회
@@ -38,12 +39,13 @@ public class ReviewController {
     }
 
     // 카테고리별 게시글 조회
-    @GetMapping("/api/reviews/category/{id}")
-    public ApiResponseDto<List<ReviewResponseDto>> getReviewsByCategory(@PathVariable Long id,
-                                                                        @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
-                                                                        @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria) {
-        return reviewService.getReviewsByCategory(id, pageNo, criteria);
-    }
+//    @GetMapping("/api/reviews/category/{id}")
+//    public ApiResponseDto<List<ReviewResponseDto>> getReviewsByCategory(@PathVariable Long id,
+//                                                                        @RequestParam(required = false, defaultValue = "0", value = "category") int category,
+//                                                                        @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+//                                                                        @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria) {
+//        return reviewService.getReviewsByCategory(id, category, pageNo, criteria);
+//    }
 
     // 내가 쓴 리뷰 조회
     @GetMapping("/api/myreviews")
