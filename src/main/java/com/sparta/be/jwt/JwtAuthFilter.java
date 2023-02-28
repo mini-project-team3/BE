@@ -29,6 +29,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // request 에 담긴 토큰을 가져온다.
         String token = jwtUtil.resolveToken(request);
 
+        if(!request.getRequestURI().contains("/api/")){
+            request.setAttribute("exception", ErrorType.NOT_VALID_REQUEST);
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // 토큰이 null 이면 다음 필터로 넘어간다
         if (token == null) {
             request.setAttribute("exception", ErrorType.NOT_TOKEN);
