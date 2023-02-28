@@ -1,6 +1,6 @@
 package com.sparta.be.service;
 
-import com.sparta.be.common.ApiResponseDto;
+import com.sparta.be.common.SuccessResponseDto;
 import com.sparta.be.common.ErrorType;
 import com.sparta.be.common.ResponseUtils;
 import com.sparta.be.dto.LoginRequestDto;
@@ -27,7 +27,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public ApiResponseDto<Void> signup(SignupRequestDto signupRequestDto) { // 회원 가입
+    public SuccessResponseDto<Void> signup(SignupRequestDto signupRequestDto) { // 회원 가입
         String loginId = signupRequestDto.getLoginId();
         String password = passwordEncoder.encode(signupRequestDto.getPassword()); // 비밀번호 암호화
         String nickname = signupRequestDto.getNickname();
@@ -50,7 +50,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public ApiResponseDto<Void> login(LoginRequestDto loginRequestDto, HttpServletResponse response) { // 회원 가입
+    public SuccessResponseDto<Void> login(LoginRequestDto loginRequestDto, HttpServletResponse response) { // 회원 가입
         String loginId = loginRequestDto.getLoginId();
         String password = loginRequestDto.getPassword();
 

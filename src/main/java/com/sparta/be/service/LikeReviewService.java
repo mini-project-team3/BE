@@ -1,6 +1,6 @@
 package com.sparta.be.service;
 
-import com.sparta.be.common.ApiResponseDto;
+import com.sparta.be.common.SuccessResponseDto;
 import com.sparta.be.common.ErrorType;
 import com.sparta.be.common.ResponseUtils;
 import com.sparta.be.entity.LikeReview;
@@ -22,7 +22,7 @@ public class LikeReviewService {
     private final ReviewRepository reviewRepository;
 
     @Transactional
-    public ApiResponseDto<Void> likeReview(Long id, User user){
+    public SuccessResponseDto<Void> likeReview(Long id, User user){
         //리뷰 확인
         Optional<Review> review = reviewRepository.findById(id);
         if (review.isEmpty()){
@@ -43,7 +43,7 @@ public class LikeReviewService {
     }
 
     @Transactional
-    public ApiResponseDto<Void> likeCancelReview(Long id, User user){
+    public SuccessResponseDto<Void> likeCancelReview(Long id, User user){
         //리뷰 확인
         Optional<Review> review = reviewRepository.findById(id);
         if (review.isEmpty()){

@@ -1,6 +1,6 @@
 package com.sparta.be.service;
 
-import com.sparta.be.common.ApiResponseDto;
+import com.sparta.be.common.SuccessResponseDto;
 import com.sparta.be.common.ErrorType;
 import com.sparta.be.common.ResponseUtils;
 import com.sparta.be.entity.Comment;
@@ -23,7 +23,7 @@ public class LikeCommnetService {
     private final CommentRepository commentRepsoitory;
 
     @Transactional
-    public ApiResponseDto<Void> likeComment(Long id, User user){
+    public SuccessResponseDto<Void> likeComment(Long id, User user){
         //댓글 확인
         Optional<Comment> comment = commentRepsoitory.findById(id);
         if (comment.isEmpty()){
@@ -44,7 +44,7 @@ public class LikeCommnetService {
     }
 
     @Transactional
-    public ApiResponseDto<Void> likeCancelComment(Long id, User user){
+    public SuccessResponseDto<Void> likeCancelComment(Long id, User user){
         //댓글 확인
         Optional<Comment> comment = commentRepsoitory.findById(id);
         if (comment.isEmpty()){
