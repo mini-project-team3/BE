@@ -17,11 +17,10 @@ public class ReviewDetailResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private int likeCount;
-    private Boolean isWriter;
     private List<CommentResponseDto> commentList;
 
     @Builder
-    private ReviewDetailResponseDto(Long id, String title, String contents, String nickname, LocalDateTime createdAt, LocalDateTime modifiedAt, int likeCount, boolean isWriter, List<CommentResponseDto> commentList) {
+    private ReviewDetailResponseDto(Long id, String title, String contents, String nickname, LocalDateTime createdAt, LocalDateTime modifiedAt, int likeCount, List<CommentResponseDto> commentList) {
         this.id = id;
         this.title = title;
         this.contents = contents;
@@ -29,11 +28,10 @@ public class ReviewDetailResponseDto {
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
         this.likeCount = likeCount;
-        this.isWriter = isWriter;
         this.commentList = commentList;
     }
 
-    public static ReviewDetailResponseDto from(Review entity, boolean isWriter) {
+    public static ReviewDetailResponseDto from(Review entity) {
         return ReviewDetailResponseDto.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
@@ -42,7 +40,6 @@ public class ReviewDetailResponseDto {
                 .createdAt(entity.getCreatedAt())
                 .modifiedAt(entity.getModifiedAt())
                 .likeCount(entity.getLikeCount())
-                .isWriter(isWriter)
                 .commentList(entity.getCommentList().stream().map(CommentResponseDto::from).toList())
                 .build();
     }

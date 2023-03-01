@@ -34,8 +34,8 @@ public class ReviewController {
 
     // 게시글 상세 조회
     @GetMapping("/api/reviews/{id}")
-    public SuccessResponseDto<ReviewDetailResponseDto> getReview(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return reviewService.getReview(id, userDetails.getUser());
+    public SuccessResponseDto<ReviewDetailResponseDto> getReview(@PathVariable Long id){
+        return reviewService.getReview(id);
     }
 
     // 내가 쓴 리뷰 조회
