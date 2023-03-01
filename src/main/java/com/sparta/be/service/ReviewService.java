@@ -4,6 +4,7 @@ import com.sparta.be.common.SuccessResponseDto;
 import com.sparta.be.common.ErrorType;
 import com.sparta.be.common.ResponseUtils;
 import com.sparta.be.dto.ReviewDetailResponseDto;
+import com.sparta.be.dto.ReviewListResponseDto;
 import com.sparta.be.dto.ReviewRequestDto;
 import com.sparta.be.dto.ReviewResponseDto;
 import com.sparta.be.entity.*;
@@ -55,26 +56,28 @@ public class ReviewService {
 
     //전체 게시글 조회
     @Transactional(readOnly = true)
-    public SuccessResponseDto<List<ReviewResponseDto>> getReviews(int category, int pageNo, String criteria) {
+    public SuccessResponseDto<ReviewResponseDto> getReviews(int category, int pageNo, String criteria) {
 
         if (category > CategoryType.values().length) {
             throw new IllegalArgumentException(ErrorType.NOT_EXISTING_CATEGORY.getMessage());
         }
 
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
-        Page<ReviewResponseDto> page;
+        Page<ReviewListResponseDto> page;
 
         if (category == 0) {
-            page = reviewRepository.findAll(pageable).map(ReviewResponseDto::from);
+            page = reviewRepository.findAll(pageable).map(ReviewListResponseDto::from);
         } else {
             CategoryType categoryType = CategoryType.valueOf("C" + category);
             page = reviewRepository.findAllByCategoryListCategoryCategoryType(categoryType, pageable)
-                    .map(ReviewResponseDto::from);
+                    .map(ReviewListResponseDto::from);
         }
 
         checkInvalidPage(pageNo, page.getTotalElements());
 
-        return ResponseUtils.ok(page.getContent());
+        ReviewResponseDto response = getReviewResponseDto(pageNo, page);
+
+        return ResponseUtils.ok(response);
     }
 
     // 게시글 상세 조회
@@ -96,24 +99,30 @@ public class ReviewService {
 
     // 내가 쓴 리뷰 조회
     @Transactional(readOnly = true)
-    public SuccessResponseDto<List<ReviewResponseDto>> getMyReviews(int pageNo, String criteria, User user) {
+    public SuccessResponseDto<ReviewResponseDto> getMyReviews(int pageNo, String criteria, User user) {
 
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
-        Page<ReviewResponseDto> page = reviewRepository.findAllByUser(user, pageable).map(ReviewResponseDto::from);
+        Page<ReviewListResponseDto> page = reviewRepository.findAllByUser(user, pageable).map(ReviewListResponseDto::from);
 
         checkInvalidPage(pageNo, page.getTotalElements());
 
-        return ResponseUtils.ok(page.getContent());
+        ReviewResponseDto response = getReviewResponseDto(pageNo, page);
+
+        return ResponseUtils.ok(response);
     }
 
     // 내가 좋아요한 리뷰 조회
     @Transactional(readOnly = true)
-    public SuccessResponseDto<List<ReviewResponseDto>> getMyLikeReviews(int pageNo, String criteria, User user) {
+    public SuccessResponseDto<ReviewResponseDto> getMyLikeReviews(int pageNo, String criteria, User user) {
 
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, criteria));
-        Page<ReviewResponseDto> page = reviewRepository.findAllByLikeReviewListUser(user, pageable).map(ReviewResponseDto::from);
+        Page<ReviewListResponseDto> page = reviewRepository.findAllByLikeReviewListUser(user, pageable).map(ReviewListResponseDto::from);
 
-        return ResponseUtils.ok(page.getContent());
+        checkInvalidPage(pageNo, page.getTotalElements());
+
+        ReviewResponseDto response = getReviewResponseDto(pageNo, page);
+
+        return ResponseUtils.ok(response);
     }
 
     //게시글 수정
@@ -149,5 +158,14 @@ public class ReviewService {
         if (pageNo > totalElements / PAGE_SIZE) {
             throw new IllegalArgumentException(ErrorType.NOT_EXISTING_PAGE.getMessage());
         }
+    }
+
+    private ReviewResponseDto getReviewResponseDto(int pageNo, Page<ReviewListResponseDto> page) {
+        int totalItems = (int) page.getTotalElements();
+        int totalPages = page.getTotalPages();
+        boolean isLastPage = (pageNo == (totalPages - 1));
+        boolean is2ndLastPage = (pageNo == (totalPages - 2));
+
+        return ReviewResponseDto.from(totalItems, totalPages, isLastPage, is2ndLastPage, page.getContent());
     }
 }
