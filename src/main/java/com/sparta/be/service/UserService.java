@@ -66,7 +66,7 @@ public class UserService {
         }
 
         // Authorization 에 token 설정
-        String token = jwtUtil.createToken(user.getLoginId());
+        String token = jwtUtil.createToken(user.getNickname());
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
 
         // 쿠키 설정
