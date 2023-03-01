@@ -1,37 +1,35 @@
 package com.sparta.be.dto;
 
-import com.sparta.be.entity.Review;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class ReviewResponseDto {
 
-    private Long id;
-    private String title;
-    private String nickname;
-    private LocalDateTime createdAt;
-    private int likeCount;
-
+    private Integer totalItems;
+    private Integer totalPages;
+    private Boolean isLastPage;
+    private Boolean is2ndLastPage;
+    private List<ReviewListResponseDto> reviewList;
 
     @Builder
-    public ReviewResponseDto(Long id, String title, String nickname, LocalDateTime createdAt, int likeCount) {
-        this.id = id;
-        this.title = title;
-        this.nickname = nickname;
-        this.createdAt = createdAt;
-        this.likeCount = likeCount;
+    private ReviewResponseDto(Integer totalItems, Integer totalPages, Boolean isLastPage, Boolean is2ndLastPage, List<ReviewListResponseDto> reviewList) {
+        this.totalItems = totalItems;
+        this.totalPages = totalPages;
+        this.isLastPage = isLastPage;
+        this.is2ndLastPage = is2ndLastPage;
+        this.reviewList = reviewList;
     }
 
-    public static ReviewResponseDto from(Review entity) {
+    public static ReviewResponseDto from(Integer totalItems, Integer totalPages, Boolean isLastPage, Boolean is2ndLastPage, List<ReviewListResponseDto> reviewList) {
         return ReviewResponseDto.builder()
-                .id(entity.getId())
-                .title(entity.getTitle())
-                .nickname(entity.getUser().getNickname())
-                .createdAt(entity.getCreatedAt())
-                .likeCount(entity.getLikeCount())
+                .totalItems(totalItems)
+                .totalPages(totalPages)
+                .isLastPage(isLastPage)
+                .is2ndLastPage(is2ndLastPage)
+                .reviewList(reviewList)
                 .build();
     }
 
