@@ -2,6 +2,7 @@ package com.sparta.be.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -17,4 +18,19 @@ public class SignupRequestDto {
 
     @NotBlank
     private String nickname;
+
+    @Builder
+    private SignupRequestDto(String loginId, String password, String nickname) {
+        this.loginId = loginId;
+        this.password = password;
+        this.nickname = nickname;
+    }
+
+    public static SignupRequestDto of(String loginId, String password, String nickname) {
+        return SignupRequestDto.builder()
+                .loginId(loginId)
+                .password(password)
+                .nickname(nickname)
+                .build();
+    }
 }

@@ -2,6 +2,7 @@ package com.sparta.be.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,6 +30,7 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
+    @Builder
     public User(String loginId, String password, String nickName){
         this.loginId = loginId;
         this.password = password;
