@@ -25,16 +25,15 @@ public class LikeCommnetService {
     @Transactional
     public SuccessResponseDto<Void> likeComment(Long id, User user){
         //댓글 확인
-        Optional<Comment> comment = commentRepsoitory.findById(id);
-        if (comment.isEmpty()){
-            throw new IllegalArgumentException(ErrorType.NOT_FOUND_COMMENT_WRITING.getMessage());
-        }
+        Comment comment = commentRepsoitory.findById(id).orElseThrow(
+                () -> new IllegalArgumentException(ErrorType.NOT_FOUND_COMMENT_WRITING.getMessage())
+        );
 
 
-        Optional<LikeComment> found = likeCommentRepository.findByCommentAndUser(comment.get(),user);
+        Optional<LikeComment> found = likeCommentRepository.findByCommentAndUser(comment,user);
         if (found.isEmpty()){
-             comment.get().likeCommentUp();
-            LikeComment likeComment = LikeComment.of(comment.get(), user);
+             comment.likeCommentUp();
+            LikeComment likeComment = LikeComment.of(comment, user);
             likeCommentRepository.save(likeComment);
         }else {
             throw new IllegalArgumentException(ErrorType.LIKE_ALREADY_DONE.getMessage());
@@ -46,15 +45,15 @@ public class LikeCommnetService {
     @Transactional
     public SuccessResponseDto<Void> likeCancelComment(Long id, User user){
         //댓글 확인
-        Optional<Comment> comment = commentRepsoitory.findById(id);
-        if (comment.isEmpty()){
-            throw new IllegalArgumentException(ErrorType.NOT_FOUND_COMMENT_WRITING.getMessage());
-        }
+        Comment comment = commentRepsoitory.findById(id).orElseThrow(
+                () -> new IllegalArgumentException(ErrorType.NOT_FOUND_COMMENT_WRITING.getMessage())
+        );
 
 
-        Optional<LikeComment> found = likeCommentRepository.findByCommentAndUser(comment.get(),user);
+
+        Optional<LikeComment> found = likeCommentRepository.findByCommentAndUser(comment,user);
         if (found.isPresent()) {
-            comment.get().likeCommentDown();
+            comment.likeCommentDown();
             likeCommentRepository.delete(found.get());
             likeCommentRepository.flush();
         }else {

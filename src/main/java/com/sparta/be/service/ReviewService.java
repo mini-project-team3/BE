@@ -1,8 +1,8 @@
 package com.sparta.be.service;
 
-import com.sparta.be.common.SuccessResponseDto;
 import com.sparta.be.common.ErrorType;
 import com.sparta.be.common.ResponseUtils;
+import com.sparta.be.common.SuccessResponseDto;
 import com.sparta.be.dto.ReviewDetailResponseDto;
 import com.sparta.be.dto.ReviewListResponseDto;
 import com.sparta.be.dto.ReviewRequestDto;
@@ -12,13 +12,15 @@ import com.sparta.be.repository.CategoryRepository;
 import com.sparta.be.repository.ReviewCategoryRepository;
 import com.sparta.be.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -82,17 +84,11 @@ public class ReviewService {
 
     // 게시글 상세 조회
     @Transactional(readOnly = true)
-    public SuccessResponseDto<ReviewDetailResponseDto> getReview(Long id, User user) {
+    public SuccessResponseDto<ReviewDetailResponseDto> getReview(Long id) {
 
         Review review = getReviewById(id);
 
-        boolean isWriter = false;
-        Optional<Review> found = reviewRepository.findByIdAndUser(id, user);
-        if (found.isPresent()) {
-            isWriter = true;
-        }
-
-        ReviewDetailResponseDto responseDto = ReviewDetailResponseDto.from(review, isWriter);
+        ReviewDetailResponseDto responseDto = ReviewDetailResponseDto.from(review);
 
         return ResponseUtils.ok(responseDto);
     }
