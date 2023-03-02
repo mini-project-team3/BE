@@ -24,16 +24,14 @@ public class LikeReviewService {
     @Transactional
     public SuccessResponseDto<Void> likeReview(Long id, User user){
         //리뷰 확인
-        Optional<Review> review = reviewRepository.findById(id);
-        if (review.isEmpty()){
-            throw new IllegalArgumentException(ErrorType.NOT_FOUND_REVIEW_WRITING.getMessage());
-        }
+        Review review = reviewRepository.findById(id).orElseThrow(
+                () ->   new IllegalArgumentException(ErrorType.NOT_FOUND_REVIEW_WRITING.getMessage())
+        );
 
-
-        Optional<LikeReview> found = likeReviewRepository.findByReviewAndUser(review.get(),user);
+        Optional<LikeReview> found = likeReviewRepository.findByReviewAndUser(review,user);
         if (found.isEmpty()){
-            review.get().likeReviewUp();
-            LikeReview likeReview = LikeReview.of(review.get(), user);
+            review.likeReviewUp();
+            LikeReview likeReview = LikeReview.of(review, user);
             likeReviewRepository.save(likeReview);
         }else {
            throw new IllegalArgumentException(ErrorType.LIKE_ALREADY_DONE.getMessage());
@@ -45,15 +43,14 @@ public class LikeReviewService {
     @Transactional
     public SuccessResponseDto<Void> likeCancelReview(Long id, User user){
         //리뷰 확인
-        Optional<Review> review = reviewRepository.findById(id);
-        if (review.isEmpty()){
-            throw new IllegalArgumentException(ErrorType.NOT_FOUND_REVIEW_WRITING.getMessage());
-        }
+        Review review = reviewRepository.findById(id).orElseThrow(
+                () ->   new IllegalArgumentException(ErrorType.NOT_FOUND_REVIEW_WRITING.getMessage())
+        );
 
 
-        Optional<LikeReview> found = likeReviewRepository.findByReviewAndUser(review.get(),user);
+        Optional<LikeReview> found = likeReviewRepository.findByReviewAndUser(review,user);
         if (found.isPresent()) {
-            review.get().likeReviewDown();
+            review.likeReviewDown();
             likeReviewRepository.delete(found.get());
             likeReviewRepository.flush();
         }else {
