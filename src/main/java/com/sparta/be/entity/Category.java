@@ -19,6 +19,7 @@ public class Category {
     @Column(nullable = false)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private CategoryType categoryType;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
