@@ -46,6 +46,11 @@
 
 ---
 
+## 🎬 시연영상
+[[미니프로젝트 ] 꼬북이들(Go-Book) - 독서리뷰 사이트](https://youtu.be/QDi0Pd_YOK8)
+
+---
+
 ## 📋 와이어 프레임
 
 [와이어프레임 보기](https://www.figma.com/file/pXVtDukCzJHbO0VN8O2rjH/Untitled?node-id=0%3A1&t=BDRI1YjfzprBuk7I-1)
