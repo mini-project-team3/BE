@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 public class ReviewController {
@@ -26,7 +24,7 @@ public class ReviewController {
 
     //게시글 전체 조회
     @GetMapping("/api/reviews")
-    public SuccessResponseDto<List<ReviewResponseDto>> getReviews(@RequestParam(required = false, defaultValue = "0", value = "category") int category,
+    public SuccessResponseDto<ReviewResponseDto> getReviews(@RequestParam(required = false, defaultValue = "0", value = "category") int category,
                                                               @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
                                                               @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria) {
         return reviewService.getReviews(category, pageNo, criteria);
@@ -40,7 +38,7 @@ public class ReviewController {
 
     // 내가 쓴 리뷰 조회
     @GetMapping("/api/myreviews")
-    public SuccessResponseDto<List<ReviewResponseDto>> getMyReviews(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public SuccessResponseDto<ReviewResponseDto> getMyReviews(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                     @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
                                                                     @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria) {
         return reviewService.getMyReviews(pageNo, criteria, userDetails.getUser());
@@ -48,7 +46,7 @@ public class ReviewController {
 
     // 내가 좋아요한 리뷰 조회
     @GetMapping("/api/reviews/likes")
-    public SuccessResponseDto<List<ReviewResponseDto>> getMyLikeReviews(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public SuccessResponseDto<ReviewResponseDto> getMyLikeReviews(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                         @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
                                                                         @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria) {
         return reviewService.getMyLikeReviews(pageNo, criteria, userDetails.getUser());
