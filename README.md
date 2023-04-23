@@ -20,8 +20,12 @@
     - React
 - BE
     - Java
-    - Spring
+    - Spring Boot
+    - Spring Data JPA
+    - Spring Security
     - MySQL
+    - AWS EC2
+    - AWS RDS
 
 ## 💡 구현기능
 - 로그인 기능
